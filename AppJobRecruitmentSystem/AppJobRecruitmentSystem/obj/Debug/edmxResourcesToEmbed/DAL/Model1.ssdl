@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BDRecruitmentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Candidate">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="firstname" Type="varchar" MaxLength="150" />
+    <Property Name="lastname" Type="varchar" MaxLength="150" />
+    <Property Name="identification" Type="int" />
+    <Property Name="email" Type="varchar" MaxLength="150" />
+    <Property Name="resume" Type="varchar" MaxLength="150" />
+    <Property Name="user_id" Type="int" />
+  </EntityType>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="150" />
+    <Property Name="Description" Type="varchar" MaxLength="150" />
+    <Property Name="Email" Type="varchar" MaxLength="100" />
+    <Property Name="user_id" Type="int" />
+  </EntityType>
+  <EntityType Name="JobOffer">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="company_id" Type="int" />
+    <Property Name="description" Type="varchar" MaxLength="150" />
+    <Property Name="date" Type="date" />
+    <Property Name="enable" Type="bit" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'BDRecruitment.dbo.JobOffer_Candidate' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="JobOffer_Candidate">
+    <Key>
+      <PropertyRef Name="id_jobOffer" />
+      <PropertyRef Name="id_person" />
+    </Key>
+    <Property Name="id_jobOffer" Type="int" Nullable="false" />
+    <Property Name="id_person" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="username" Type="varchar" MaxLength="150" />
+    <Property Name="password" Type="varchar" MaxLength="150" />
+    <Property Name="rol" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_Candidate_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Candidate" Type="Self.Candidate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Candidate">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Company_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Company" Type="Self.Company" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Company">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_JobOffer_Candidate_Candidate">
+    <End Role="Candidate" Type="Self.Candidate" Multiplicity="1" />
+    <End Role="JobOffer_Candidate" Type="Self.JobOffer_Candidate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Candidate">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="JobOffer_Candidate">
+        <PropertyRef Name="id_person" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_JobOffer_Candidate_JobOffer">
+    <End Role="JobOffer" Type="Self.JobOffer" Multiplicity="1" />
+    <End Role="JobOffer_Candidate" Type="Self.JobOffer_Candidate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="JobOffer">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="JobOffer_Candidate">
+        <PropertyRef Name="id_jobOffer" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_JobOffer_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+    <End Role="JobOffer" Type="Self.JobOffer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="JobOffer">
+        <PropertyRef Name="company_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BDRecruitmentModelStoreContainer">
+    <EntitySet Name="Candidate" EntityType="Self.Candidate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="JobOffer" EntityType="Self.JobOffer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="JobOffer_Candidate" EntityType="Self.JobOffer_Candidate" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [JobOffer_Candidate].[id_jobOffer] AS [id_jobOffer], 
+    [JobOffer_Candidate].[id_person] AS [id_person]
+    FROM [dbo].[JobOffer_Candidate] AS [JobOffer_Candidate]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_Candidate_User" Association="Self.FK_Candidate_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Candidate" EntitySet="Candidate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Company_User" Association="Self.FK_Company_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Company" EntitySet="Company" />
+    </AssociationSet>
+    <AssociationSet Name="FK_JobOffer_Candidate_Candidate" Association="Self.FK_JobOffer_Candidate_Candidate">
+      <End Role="Candidate" EntitySet="Candidate" />
+      <End Role="JobOffer_Candidate" EntitySet="JobOffer_Candidate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_JobOffer_Candidate_JobOffer" Association="Self.FK_JobOffer_Candidate_JobOffer">
+      <End Role="JobOffer" EntitySet="JobOffer" />
+      <End Role="JobOffer_Candidate" EntitySet="JobOffer_Candidate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_JobOffer_Company" Association="Self.FK_JobOffer_Company">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="JobOffer" EntitySet="JobOffer" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

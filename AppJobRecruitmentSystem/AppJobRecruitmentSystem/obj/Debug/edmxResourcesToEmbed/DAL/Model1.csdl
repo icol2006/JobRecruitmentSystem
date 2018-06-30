@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BDRecruitmentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Candidate">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="firstname" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="lastname" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="identification" Type="Int32" />
+    <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="resume" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="user_id" Type="Int32" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Candidate_User" FromRole="Candidate" ToRole="User" />
+    <NavigationProperty Name="JobOffer" Relationship="Self.JobOffer_Candidate" FromRole="Candidate" ToRole="JobOffer" />
+  </EntityType>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="user_id" Type="Int32" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Company_User" FromRole="Company" ToRole="User" />
+    <NavigationProperty Name="JobOffer" Relationship="Self.FK_JobOffer_Company" FromRole="Company" ToRole="JobOffer" />
+  </EntityType>
+  <EntityType Name="JobOffer">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="company_id" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="date" Type="DateTime" Precision="0" />
+    <Property Name="enable" Type="Boolean" />
+    <NavigationProperty Name="Company" Relationship="Self.FK_JobOffer_Company" FromRole="JobOffer" ToRole="Company" />
+    <NavigationProperty Name="Candidate" Relationship="Self.JobOffer_Candidate" FromRole="JobOffer" ToRole="Candidate" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="username" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="password" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="rol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Candidate" Relationship="Self.FK_Candidate_User" FromRole="User" ToRole="Candidate" />
+    <NavigationProperty Name="Company" Relationship="Self.FK_Company_User" FromRole="User" ToRole="Company" />
+  </EntityType>
+  <Association Name="FK_Candidate_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Candidate" Type="Self.Candidate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Candidate">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Company_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Company" Type="Self.Company" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Company">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_JobOffer_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+    <End Role="JobOffer" Type="Self.JobOffer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="JobOffer">
+        <PropertyRef Name="company_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="JobOffer_Candidate">
+    <End Role="Candidate" Type="Self.Candidate" Multiplicity="*" />
+    <End Role="JobOffer" Type="Self.JobOffer" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="BDRecruitmentEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Candidate" EntityType="Self.Candidate" />
+    <EntitySet Name="Company" EntityType="Self.Company" />
+    <EntitySet Name="JobOffer" EntityType="Self.JobOffer" />
+    <EntitySet Name="User" EntityType="Self.User" />
+    <AssociationSet Name="FK_Candidate_User" Association="Self.FK_Candidate_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Candidate" EntitySet="Candidate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Company_User" Association="Self.FK_Company_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Company" EntitySet="Company" />
+    </AssociationSet>
+    <AssociationSet Name="FK_JobOffer_Company" Association="Self.FK_JobOffer_Company">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="JobOffer" EntitySet="JobOffer" />
+    </AssociationSet>
+    <AssociationSet Name="JobOffer_Candidate" Association="Self.JobOffer_Candidate">
+      <End Role="Candidate" EntitySet="Candidate" />
+      <End Role="JobOffer" EntitySet="JobOffer" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="BDRecruitmentModelStoreContainer" CdmEntityContainer="BDRecruitmentEntities">
+    <EntitySetMapping Name="Candidate">
+      <EntityTypeMapping TypeName="BDRecruitmentModel.Candidate">
+        <MappingFragment StoreEntitySet="Candidate">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="firstname" ColumnName="firstname" />
+          <ScalarProperty Name="lastname" ColumnName="lastname" />
+          <ScalarProperty Name="identification" ColumnName="identification" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="resume" ColumnName="resume" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Company">
+      <EntityTypeMapping TypeName="BDRecruitmentModel.Company">
+        <MappingFragment StoreEntitySet="Company">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="JobOffer">
+      <EntityTypeMapping TypeName="BDRecruitmentModel.JobOffer">
+        <MappingFragment StoreEntitySet="JobOffer">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="company_id" ColumnName="company_id" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="enable" ColumnName="enable" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="User">
+      <EntityTypeMapping TypeName="BDRecruitmentModel.User">
+        <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="rol" ColumnName="rol" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="JobOffer_Candidate" TypeName="BDRecruitmentModel.JobOffer_Candidate" StoreEntitySet="JobOffer_Candidate">
+      <EndProperty Name="Candidate">
+        <ScalarProperty Name="id" ColumnName="id_person" />
+      </EndProperty>
+      <EndProperty Name="JobOffer">
+        <ScalarProperty Name="id" ColumnName="id_jobOffer" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>
