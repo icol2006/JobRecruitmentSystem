@@ -169,9 +169,17 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="BAL\CandidateBAL.cs" />
+    <Compile Include="BAL\CompanyBAL.cs" />
+    <Compile Include="BAL\Job.cs" />
+    <Compile Include="BAL\JobAplicationBAL.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CandidatesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DAL\CompanyDAL.cs" />
+    <Compile Include="DAL\JobAplicationDAL.cs" />
+    <Compile Include="DAL\JobDAL.cs" />
     <Compile Include="DAL\SqlHelper.cs" />
     <Compile Include="DAL\CandidateDAL.cs" />
     <Compile Include="Entities\Candidate.cs" />
@@ -244,6 +252,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Candidates\Create.cshtml" />
+    <Content Include="Views\Candidates\Delete.cshtml" />
+    <Content Include="Views\Candidates\Details.cshtml" />
+    <Content Include="Views\Candidates\Edit.cshtml" />
+    <Content Include="Views\Candidates\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

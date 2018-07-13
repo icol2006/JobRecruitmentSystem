@@ -7,6 +7,7 @@ namespace AppJobRecruitmentSystem.Entities
 {
     public class JobAplicacion
     {
+        public int id { get; set; }
         public int id_candidate { get; set; }
         public int id_job { get; set; }
         public DateTime dateofaplication { get; set; }

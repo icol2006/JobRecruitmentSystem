@@ -29,5 +29,7 @@ namespace AppJobRecruitmentSystem.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Candidate> Candidates { get; set; }
     }
 }

@@ -10,17 +10,7 @@ namespace AppJobRecruitmentSystem.Controllers
     public class HomeController : Controller
     {
         public ActionResult Index()
-        {
-            CandidateDAL dal = new CandidateDAL();
-            Entities.Candidate cc = new Entities.Candidate();
-            cc.id = 22;
-            cc.email = "Adsasdf3333";
-            cc.firtsname="xxxx";
-            cc.identification = 23232;
-            cc.resume = "adslkjasdlkjasl";
-            cc.password = "sda";
-            dal.UpdateCandidate(cc);
-            
+        {            
             return View();
         }
 
