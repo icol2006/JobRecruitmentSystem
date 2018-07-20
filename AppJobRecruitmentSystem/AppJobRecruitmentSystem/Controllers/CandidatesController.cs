@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using AppJobRecruitmentSystem.Entities;
 using AppJobRecruitmentSystem.Models;
 using AppJobRecruitmentSystem.BAL;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -21,15 +24,77 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(db.GetListCandidates());
         }
 
+        public async Task<ActionResult> loadCandidates()
+        {
+            List<Candidate> listCandidate = new List<Candidate>();
+            CandidateBAL can = new CandidateBAL();
+
+            List<Candidate> list = getCandidates();
+
+            foreach (Candidate pCandidate in list)
+            {
+                var UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var user = new ApplicationUser { UserName = pCandidate.email, Email = pCandidate.email };
+                IdentityUserRole rol = new IdentityUserRole();
+
+                var result = await UserManager.CreateAsync(user, pCandidate.password);
+
+                var result2 = await UserManager.AddToRoleAsync(user.Id, "1");
+
+                pCandidate.id = user.Id;
+                if (result.Succeeded && result2.Succeeded)
+                {
+                    new CandidateBAL().InsertCandidate(pCandidate);
+                }
+            }
+
+
+            list = new List<Candidate>();
+            list = can.GetListCandidates();
+
+           Candidate x= can.GetCandidate(list[0]);
+
+            return View(list);
+
+        }
+
+        public List<Candidate> getCandidates()
+        {
+            List<Candidate> listCandidate = new List<Candidate>();
+            Candidate candidate = new Candidate();
+
+            candidate.email = "adskjl@al.com";
+            candidate.firtsname = "dasl";
+            candidate.identification = 43;
+            candidate.password = "Pescado03-";
+            listCandidate.Add(candidate);
+
+            candidate = new Candidate();
+            candidate.email = "adskjl2@al.com";
+            candidate.firtsname = "dasl2";
+            candidate.identification = 432;
+            candidate.password = "Pescado03-";
+            listCandidate.Add(candidate);
+
+            candidate = new Candidate();
+            candidate.email = "adskjl3@al.com";
+            candidate.firtsname = "dasl3";
+            candidate.identification = 433;
+            candidate.password = "Pescado03-";
+            listCandidate.Add(candidate);
+
+            return listCandidate;
+        }
+
         // GET: Candidates/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(String id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Candidate candidate = new Candidate();
-            candidate.id =(int) id;
+            candidate.id =(String) id;
             candidate = db.GetCandidate(candidate);
             if (candidate == null)
             {
@@ -61,14 +126,14 @@ namespace AppJobRecruitmentSystem.Controllers
         }
 
         // GET: Candidates/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Candidate candidate = new Candidate();
-            candidate.id = (int)id;
+            candidate.id = id;
             candidate = db.GetCandidate(candidate);
             if (candidate == null)
             {

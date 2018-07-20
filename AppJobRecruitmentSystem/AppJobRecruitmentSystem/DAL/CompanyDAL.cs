@@ -24,11 +24,9 @@ namespace AppJobRecruitmentSystem.DAL
 
                 while (dataReader.Read())
                 {
-                    Company Company = new Company();
-                    Company.id = Convert.ToInt32(dataReader["user_id"].ToString());
+                    Company Company = new Company(); 
+                    Company.id = dataReader["user_id"].ToString();
                     Company.name = dataReader["Name"].ToString();
-                    Company.email = dataReader["email"].ToString();
-                    Company.password = dataReader["password"].ToString();
                     Company.rol = (Rol)Convert.ToInt32(dataReader["rol"].ToString());
                     Company.Description = dataReader["Description"].ToString();
 
@@ -62,10 +60,8 @@ namespace AppJobRecruitmentSystem.DAL
 
                 while (dataReader.Read())
                 {
-                    Company.id = Convert.ToInt32(dataReader["user_id"].ToString());
+                    Company.id = dataReader["user_id"].ToString();
                     Company.name = dataReader["Name"].ToString();
-                    Company.email = dataReader["email"].ToString();
-                    Company.password = dataReader["password"].ToString();
                     Company.rol = (Rol)Convert.ToInt32(dataReader["rol"].ToString());
                     Company.Description = dataReader["Description"].ToString();
                 }
@@ -85,9 +81,7 @@ namespace AppJobRecruitmentSystem.DAL
         public void InsertCompany(Company pCompany)
         {
             var parameters = new List<SqlParameter>();
-            parameters.Add(dbManager.CreateParameter("@email", 150, pCompany.email == null ? "" : pCompany.email, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@password", 150, pCompany.password == null ? "" : pCompany.password, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@rol", 2, pCompany.rol, DbType.Int16));
+            parameters.Add(dbManager.CreateParameter("@User_id", 150, pCompany.id == null ? "" : pCompany.id, DbType.String));
             parameters.Add(dbManager.CreateParameter("@Name", 150, pCompany.name == null ? "" : pCompany.name, DbType.String));
             parameters.Add(dbManager.CreateParameter("@Description", 150, pCompany.Description == null ? "" : pCompany.Description, DbType.String));
   
@@ -97,10 +91,7 @@ namespace AppJobRecruitmentSystem.DAL
         public void UpdateCompany(Company pCompany)
         {
             var parameters = new List<SqlParameter>();
-            parameters.Add(dbManager.CreateParameter("@id", 2, pCompany.id, DbType.Int16));
-            parameters.Add(dbManager.CreateParameter("@email", 150, pCompany.email == null ? "" : pCompany.email, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@password", 150, pCompany.password == null ? "" : pCompany.password, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@rol", 2, pCompany.rol, DbType.Int16));
+            parameters.Add(dbManager.CreateParameter("@User_id", 150, pCompany.id == null ? "" : pCompany.id, DbType.String));
             parameters.Add(dbManager.CreateParameter("@Name", 150, pCompany.name == null ? "" : pCompany.name, DbType.String));
             parameters.Add(dbManager.CreateParameter("@Description", 150, pCompany.Description == null ? "" : pCompany.Description, DbType.String));
 

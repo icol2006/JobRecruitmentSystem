@@ -175,7 +175,10 @@
     <Compile Include="BAL\JobAplicationBAL.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CandidatesController.cs" />
+    <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\JobAplicacionsController.cs" />
+    <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DAL\CompanyDAL.cs" />
     <Compile Include="DAL\JobAplicationDAL.cs" />
@@ -257,6 +260,21 @@
     <Content Include="Views\Candidates\Details.cshtml" />
     <Content Include="Views\Candidates\Edit.cshtml" />
     <Content Include="Views\Candidates\Index.cshtml" />
+    <Content Include="Views\Companies\Create.cshtml" />
+    <Content Include="Views\Companies\Delete.cshtml" />
+    <Content Include="Views\Companies\Details.cshtml" />
+    <Content Include="Views\Companies\Edit.cshtml" />
+    <Content Include="Views\Companies\Index.cshtml" />
+    <Content Include="Views\Jobs\Create.cshtml" />
+    <Content Include="Views\Jobs\Delete.cshtml" />
+    <Content Include="Views\Jobs\Details.cshtml" />
+    <Content Include="Views\Jobs\Edit.cshtml" />
+    <Content Include="Views\Jobs\Index.cshtml" />
+    <Content Include="Views\JobAplicacions\Create.cshtml" />
+    <Content Include="Views\JobAplicacions\Delete.cshtml" />
+    <Content Include="Views\JobAplicacions\Details.cshtml" />
+    <Content Include="Views\JobAplicacions\Edit.cshtml" />
+    <Content Include="Views\JobAplicacions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
