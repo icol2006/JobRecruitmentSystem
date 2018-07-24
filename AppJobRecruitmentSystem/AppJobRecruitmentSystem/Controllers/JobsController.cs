@@ -16,10 +16,30 @@ namespace AppJobRecruitmentSystem.Controllers
     {
         private JobBAL db = new JobBAL();
 
+
         // GET: Jobs
         public ActionResult Index()
         {
-            return View(db.GetListJobs());
+            List<Job> list = db.GetListJobs();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].company = new CompanyBAL().GetCompany(new Company(list[i].id_company, "", ""));
+            }
+            return View(list);
+        }
+
+        public ActionResult JobsbyCompany(String id_company)
+        {
+            List<Job> list = db.GetListJobs();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].company = new CompanyBAL().GetCompany(new Company(list[i].id_company, "", ""));
+            }
+
+            list=  list.FindAll(x=>x.id_company== id_company).ToList();
+            return View("Index", list);
         }
 
         // GET: Jobs/Details/5

@@ -15,7 +15,22 @@
             @Html.DisplayNameFor(model => model.id_candidate)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.candidate.firtsname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.candidate.identification)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.candidate.resume)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.id_job)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.job.description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.job.date_publication)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.dateofaplication)
@@ -29,7 +44,22 @@
             @Html.DisplayFor(modelItem => item.id_candidate)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.candidate.firtsname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.candidate.identification)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.candidate.resume)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.id_job)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.job.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.job.date_publication)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.dateofaplication)

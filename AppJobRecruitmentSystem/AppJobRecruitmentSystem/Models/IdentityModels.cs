@@ -30,12 +30,14 @@ namespace AppJobRecruitmentSystem.Models
             return new ApplicationDbContext();
         }
 
-       /* public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Candidate> Candidates { get; set; }
+        public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Candidate> Candidates { get; set; }
 
-        public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Company> Companies { get; set; }
+        /* public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Candidate> Candidates { get; set; }
 
-        public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Job> Jobs { get; set; }
+         public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Company> Companies { get; set; }
 
-        public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.JobAplicacion> JobAplicacions { get; set; }*/
+         public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Job> Jobs { get; set; }
+
+         public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.JobAplicacion> JobAplicacions { get; set; }*/
     }
 }

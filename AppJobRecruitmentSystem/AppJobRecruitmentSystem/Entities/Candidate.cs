@@ -18,5 +18,15 @@ namespace AppJobRecruitmentSystem.Entities
         {            
             rol = Rol.Candidate;
         }
+
+        public Candidate(string id, Rol rol, string firtsname, string lastname, int identification, string resume)
+        {
+            this.id = id;
+            this.rol = rol;
+            this.firtsname = firtsname;
+            this.lastname = lastname;
+            this.identification = identification;
+            this.resume = resume;
+        }
     }
 }

@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using AppJobRecruitmentSystem.Entities;
 using AppJobRecruitmentSystem.Models;
 using AppJobRecruitmentSystem.BAL;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using System.Threading.Tasks;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -19,7 +22,14 @@ namespace AppJobRecruitmentSystem.Controllers
         // GET: Companies
         public ActionResult Index()
         {
-            return View(db.GetListCompanies());
+            Company c = new Company();
+            c.id = "1e9bbaad-9d56-4d0f-b05f-fbfcc0a0f534";
+            c.name = "name";
+            c.Description = "description";
+            db.UpdateCompany(c);
+            var sd = db.GetCompany(c);
+            var ds = db.GetListCompanies();
+            return View(ds);
         }
 
         // GET: Companies/Details/5
@@ -43,6 +53,80 @@ namespace AppJobRecruitmentSystem.Controllers
         public ActionResult Create()
         {
             return View();
+        }
+
+        public async Task<List<Company>> listCompanies()
+        {
+            List<Company> listCompanies = new List<Company>();
+            Company c = new Company();
+
+
+
+            listCompanies = getCompanies();
+             foreach (Company company in listCompanies)
+             {
+                try
+                {
+                    var UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                    var user = new ApplicationUser { UserName = company.email, Email = company.email };
+                    IdentityUserRole rol = new IdentityUserRole();
+
+                    var result = await UserManager.CreateAsync(user, company.password);
+
+                    var result2 = await UserManager.AddToRoleAsync(user.Id, "1");
+
+                    company.id = user.Id;
+                    if (result.Succeeded && result2.Succeeded)
+                    {
+                        new CompanyBAL().InsertCompany(company);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    int sad = 4;
+                }
+               
+             }
+        
+
+
+            return listCompanies;
+
+        }
+
+
+        
+        private List<Company> getCompanies()
+        {
+            List<Company> listCompanies = new List<Company>();
+            Company company = new Company();
+            company.Description = "D1";
+            company.email = "email1@gmail.com";
+            company.name = "N1";
+            company.password = "Pescado03-";
+
+            listCompanies.Add(company);
+
+            company = new Company();
+            company.Description = "D2";
+            company.email = "email2@gmail.com";
+            company.name = "N2";
+            company.password = "Pescado03-";
+            listCompanies.Add(company);
+
+            company = new Company();
+            company.Description = "D3";
+            company.email = "email3@gmail.com";
+            company.name = "N3";
+            company.password = "Pescado03-";
+            listCompanies.Add(company);
+
+
+
+
+            return listCompanies;
+
         }
 
         // POST: Companies/Create

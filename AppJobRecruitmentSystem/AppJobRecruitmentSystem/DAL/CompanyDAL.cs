@@ -25,8 +25,9 @@ namespace AppJobRecruitmentSystem.DAL
                 while (dataReader.Read())
                 {
                     Company Company = new Company(); 
-                    Company.id = dataReader["user_id"].ToString();
+                    Company.id = dataReader["id"].ToString();
                     Company.name = dataReader["Name"].ToString();
+                    Company.email = dataReader["email"].ToString();
                     Company.rol = (Rol)Convert.ToInt32(dataReader["rol"].ToString());
                     Company.Description = dataReader["Description"].ToString();
 
@@ -51,7 +52,7 @@ namespace AppJobRecruitmentSystem.DAL
             var parameters = new List<SqlParameter>();
             SqlConnection connection = new SqlConnection();
 
-            parameters.Add(dbManager.CreateParameter("@id", pCompany.id, DbType.Int32));
+            parameters.Add(dbManager.CreateParameter("@id", pCompany.id, DbType.String));
 
             SqlDataReader dataReader = dbManager.GetDataReader("sp_GetCompany", CommandType.StoredProcedure, parameters.ToArray(), out connection);
 
@@ -60,8 +61,9 @@ namespace AppJobRecruitmentSystem.DAL
 
                 while (dataReader.Read())
                 {
-                    Company.id = dataReader["user_id"].ToString();
+                    Company.id = dataReader["id"].ToString();
                     Company.name = dataReader["Name"].ToString();
+                    Company.email = dataReader["email"].ToString();
                     Company.rol = (Rol)Convert.ToInt32(dataReader["rol"].ToString());
                     Company.Description = dataReader["Description"].ToString();
                 }
@@ -81,21 +83,33 @@ namespace AppJobRecruitmentSystem.DAL
         public void InsertCompany(Company pCompany)
         {
             var parameters = new List<SqlParameter>();
-            parameters.Add(dbManager.CreateParameter("@User_id", 150, pCompany.id == null ? "" : pCompany.id, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@Name", 150, pCompany.name == null ? "" : pCompany.name, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@Description", 150, pCompany.Description == null ? "" : pCompany.Description, DbType.String));
-  
-            dbManager.ExecuteNonQuery("sp_AddCompany", CommandType.StoredProcedure, parameters.ToArray());
+
+            try
+            {
+                parameters.Add(dbManager.CreateParameter("@Id", 150, pCompany.id == null ? "" : pCompany.id, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@Name", 150, pCompany.name == null ? "" : pCompany.name, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@Description", 150, pCompany.Description == null ? "" : pCompany.Description, DbType.String));
+
+                dbManager.ExecuteNonQuery("sp_AddCompany", CommandType.StoredProcedure, parameters.ToArray());
+            }
+            catch (Exception ex) { }
+
         }
 
         public void UpdateCompany(Company pCompany)
         {
             var parameters = new List<SqlParameter>();
-            parameters.Add(dbManager.CreateParameter("@User_id", 150, pCompany.id == null ? "" : pCompany.id, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@Name", 150, pCompany.name == null ? "" : pCompany.name, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@Description", 150, pCompany.Description == null ? "" : pCompany.Description, DbType.String));
 
-            dbManager.ExecuteNonQuery("sp_UpdateCompany", CommandType.StoredProcedure, parameters.ToArray());
+            try
+            {
+                parameters.Add(dbManager.CreateParameter("@Id", 150, pCompany.id == null ? "" : pCompany.id, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@Name", 150, pCompany.name == null ? "" : pCompany.name, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@Description", 150, pCompany.Description == null ? "" : pCompany.Description, DbType.String));
+
+                dbManager.ExecuteNonQuery("sp_UpdateCompany", CommandType.StoredProcedure, parameters.ToArray());
+            }
+            catch (Exception ex) { }
+
         }
     }
 }

@@ -104,22 +104,31 @@ namespace AppJobRecruitmentSystem.DAL
                 
             }catch(Exception ex) {
 
-                int dfas = 3;
+            
             }
-            int das = 3;
+
 
         }
 
         public void UpdateCandidate(Candidate pCandidate)
         {
             var parameters = new List<SqlParameter>();
-            parameters.Add(dbManager.CreateParameter("@id", 128, pCandidate.id, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@firtsname", 150, pCandidate.firtsname == null ? "" : pCandidate.firtsname, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@lastname", 150, pCandidate.lastname == null ? "" :pCandidate.lastname, DbType.String));
-            parameters.Add(dbManager.CreateParameter("@identification", 15, pCandidate.identification, DbType.Int32));
-            parameters.Add(dbManager.CreateParameter("@resume", 150, pCandidate.resume == null ? "" : pCandidate.resume, DbType.String));
 
-            dbManager.ExecuteNonQuery("sp_UpdateCandidate", CommandType.StoredProcedure, parameters.ToArray());
+            try
+            {
+                parameters.Add(dbManager.CreateParameter("@id", 128, pCandidate.id, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@firtsname", 150, pCandidate.firtsname == null ? "" : pCandidate.firtsname, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@lastname", 150, pCandidate.lastname == null ? "" : pCandidate.lastname, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@identification", 15, pCandidate.identification, DbType.Int32));
+                parameters.Add(dbManager.CreateParameter("@resume", 150, pCandidate.resume == null ? "" : pCandidate.resume, DbType.String));
+
+                dbManager.ExecuteNonQuery("sp_UpdateCandidate", CommandType.StoredProcedure, parameters.ToArray());
+            }
+            catch (Exception ex)
+            {
+
+            }
+
         }
     }
 }

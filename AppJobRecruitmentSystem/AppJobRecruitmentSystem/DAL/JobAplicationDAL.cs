@@ -17,7 +17,7 @@ namespace AppJobRecruitmentSystem.DAL
             List<JobAplicacion> listJobAplicacions = new List<JobAplicacion>();
 
             SqlConnection connection = new SqlConnection();
-            SqlDataReader dataReader = dbManager.GetDataReader("sp_GetListJobAplicacion", CommandType.StoredProcedure, null, out connection);
+            SqlDataReader dataReader = dbManager.GetDataReader("sp_GetListJobAplication", CommandType.StoredProcedure, null, out connection);
 
             try
             {
@@ -27,7 +27,7 @@ namespace AppJobRecruitmentSystem.DAL
                     JobAplicacion JobAplicacion = new JobAplicacion();
                     JobAplicacion.id = Convert.ToInt32(dataReader["id"].ToString());
                     JobAplicacion.id_job = Convert.ToInt32(dataReader["id_job"].ToString());
-                    JobAplicacion.id_candidate = Convert.ToInt32(dataReader["id_candidate"].ToString());
+                    JobAplicacion.id_candidate = dataReader["id_candidate"].ToString();
                     JobAplicacion.dateofaplication = Convert.ToDateTime(dataReader["dateofaplication"].ToString());
 
                     listJobAplicacions.Add(JobAplicacion);
@@ -53,7 +53,7 @@ namespace AppJobRecruitmentSystem.DAL
 
             parameters.Add(dbManager.CreateParameter("@id", pJobAplicacion.id, DbType.Int32));
 
-            SqlDataReader dataReader = dbManager.GetDataReader("sp_GetJobAplicacion", CommandType.StoredProcedure, parameters.ToArray(), out connection);
+            SqlDataReader dataReader = dbManager.GetDataReader("sp_GetJobAplication", CommandType.StoredProcedure, parameters.ToArray(), out connection);
 
             try
             {
@@ -62,7 +62,7 @@ namespace AppJobRecruitmentSystem.DAL
                 {
                     JobAplicacion.id = Convert.ToInt32(dataReader["id"].ToString());
                     JobAplicacion.id_job = Convert.ToInt32(dataReader["id_job"].ToString());
-                    JobAplicacion.id_candidate = Convert.ToInt32(dataReader["id_candidate"].ToString());
+                    JobAplicacion.id_candidate = dataReader["id_candidate"].ToString();
                     JobAplicacion.dateofaplication = Convert.ToDateTime(dataReader["dateofaplication"].ToString());
                 }
             }
@@ -81,22 +81,41 @@ namespace AppJobRecruitmentSystem.DAL
         public void InsertJobAplicacion(JobAplicacion pJobAplicacion)
         {
             var parameters = new List<SqlParameter>();
-            parameters.Add(dbManager.CreateParameter("@id_job", 150, pJobAplicacion.id_job, DbType.Int16));
-            parameters.Add(dbManager.CreateParameter("@id_candidate", 150, pJobAplicacion.id_candidate, DbType.Int32));
-            parameters.Add(dbManager.CreateParameter("@dateofaplication", 150, pJobAplicacion.dateofaplication, DbType.DateTime));
 
-            dbManager.ExecuteNonQuery("sp_AddJobAplicacion", CommandType.StoredProcedure, parameters.ToArray());
+            try
+            {
+                parameters.Add(dbManager.CreateParameter("@id_job", pJobAplicacion.id_job, DbType.Int16));
+                parameters.Add(dbManager.CreateParameter("@id_candidate", pJobAplicacion.id_candidate, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@dateofaplication", pJobAplicacion.dateofaplication, DbType.DateTime));
+
+                dbManager.ExecuteNonQuery("sp_AddJobAplication", CommandType.StoredProcedure, parameters.ToArray());
+            }
+            catch (Exception ex)
+            {
+
+            }
+
         }
 
         public void UpdateJobAplicacion(JobAplicacion pJobAplicacion)
         {
             var parameters = new List<SqlParameter>();
-            parameters.Add(dbManager.CreateParameter("@id", 2, pJobAplicacion.id, DbType.Int32));
-            parameters.Add(dbManager.CreateParameter("@id_job", 150, pJobAplicacion.id_job, DbType.Int16));
-            parameters.Add(dbManager.CreateParameter("@id_candidate", 150, pJobAplicacion.id_candidate, DbType.Int32));
-            parameters.Add(dbManager.CreateParameter("@dateofaplication", 150, pJobAplicacion.dateofaplication, DbType.DateTime));
 
-            dbManager.ExecuteNonQuery("sp_UpdateJobAplicacion", CommandType.StoredProcedure, parameters.ToArray());
+            try
+            {
+                parameters.Add(dbManager.CreateParameter("@id", pJobAplicacion.id, DbType.Int32));
+                parameters.Add(dbManager.CreateParameter("@id_job", pJobAplicacion.id_job, DbType.Int16));
+                parameters.Add(dbManager.CreateParameter("@id_candidate", pJobAplicacion.id_candidate, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@dateofaplication", pJobAplicacion.dateofaplication, DbType.DateTime));
+
+                dbManager.ExecuteNonQuery("sp_UpdateJobAplication", CommandType.StoredProcedure, parameters.ToArray());
+            }
+            catch (Exception ex)
+            {
+
+               
+            }
+
         }
     }
 }

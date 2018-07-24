@@ -19,7 +19,15 @@ namespace AppJobRecruitmentSystem.Controllers
         // GET: JobAplicacions
         public ActionResult Index()
         {
-            return View(db.GetListJobAplicacions());
+            List<JobAplicacion> list = db.GetListJobAplicacions();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].candidate = new CandidateBAL().GetCandidate(new Candidate(list[i].id_candidate,Rol.Candidate,"","",0,""));
+                list[i].job = new JobBAL().GetJob(new Job(list[i].id_job, "", Convert.ToDateTime("10/10/2000"), false, ""));
+                
+            }
+            return View(list);
         }
 
         // GET: JobAplicacions/Details/5

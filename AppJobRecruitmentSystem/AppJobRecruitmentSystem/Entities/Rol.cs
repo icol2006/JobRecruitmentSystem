@@ -8,7 +8,7 @@ namespace AppJobRecruitmentSystem.Entities
     public enum Rol
     {
         Administrator,
-        Company,
-        Candidate
+        Candidate,
+        Company        
     }
 }

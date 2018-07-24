@@ -21,7 +21,7 @@
             @Html.DisplayNameFor(model => model.enable_job)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.id_company)
+            @Html.DisplayNameFor(model => model.company.name)
         </th>
         <th></th>
     </tr>
@@ -38,7 +38,7 @@
             @Html.DisplayFor(modelItem => item.enable_job)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.id_company)
+            @Html.DisplayFor(modelItem => item.company.name)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.id }) |

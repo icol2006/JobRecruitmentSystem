@@ -16,10 +16,11 @@ namespace AppJobRecruitmentSystem.Controllers
 {
     public class HomeController : Controller
     {
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            List<Candidate> listCandidate = new List<Candidate>();
+         /*   List<Candidate> listCandidate = new List<Candidate>();
             CandidateBAL can = new CandidateBAL();
+            */
 
             /*Candidate candidate = new Candidate();
             candidate.email = "adskjl@al.com";
@@ -43,36 +44,38 @@ namespace AppJobRecruitmentSystem.Controllers
             can.InsertCandidate(candidate);*/
 
             //var UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            /*
             List<Candidate> list = getCandidates();
 
             foreach (Candidate pCandidate in list)
-            {
-                var UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                var user = new ApplicationUser { UserName = pCandidate.email, Email = pCandidate.email };
-                IdentityUserRole rol = new IdentityUserRole();                
+             {
+                 var UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                 var user = new ApplicationUser { UserName = pCandidate.email, Email = pCandidate.email };
+                 IdentityUserRole rol = new IdentityUserRole();                
 
-                var result = await UserManager.CreateAsync(user, pCandidate.password);
+                 var result = await UserManager.CreateAsync(user, pCandidate.password);
 
-                var result2 = await UserManager.AddToRoleAsync(user.Id, "1");
+                 var result2 = await UserManager.AddToRoleAsync(user.Id, "1");
 
-                pCandidate.id = user.Id;
-                if (result.Succeeded && result2.Succeeded)
-                {
-                    new CandidateBAL().InsertCandidate(pCandidate);
-                }
-            }
+                 pCandidate.id = user.Id;
+                 if (result.Succeeded && result2.Succeeded)
+                 {
+                     new CandidateBAL().InsertCandidate(pCandidate);
+                 }
+             }
+            */
 
+            /* list = new List<Candidate>();
+             list = can.GetListCandidates();
+             int dsa = 4;
+             Candidate x = can.GetCandidate(list[0]);
+             // 
+             x.firtsname = "xxxxxxx";
+             x.lastname = "l2";
+             x.identification = 222222;
+             x.resume = "resume";
+             can.UpdateCandidate(x);*/
 
-            list = new List<Candidate>();
-            list = can.GetListCandidates();
-            int dsa = 4;
-            Candidate x = can.GetCandidate(list[0]);
-            // 
-            x.firtsname = "xxxxxxx";
-            x.lastname = "l2";
-            x.identification = 222222;
-            x.resume = "resume";
-            can.UpdateCandidate(x);
 
             return View();
 

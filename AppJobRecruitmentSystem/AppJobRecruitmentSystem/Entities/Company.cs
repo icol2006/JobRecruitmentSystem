@@ -15,5 +15,14 @@ namespace AppJobRecruitmentSystem.Entities
             this.rol = Rol.Company;
         }
 
+
+        public Company(string id, string name, string description)
+        {
+            this.id = id;
+            this.name = name;
+            this.Description = description;
+            this.rol = Rol.Company;
+        }
+
     }
 }
