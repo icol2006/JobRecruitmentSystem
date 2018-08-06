@@ -11,24 +11,30 @@ namespace AppJobRecruitmentSystem.BAL
     {
         JobAplicationDAL jobAplicationDAL = new JobAplicationDAL();
 
-        public List<JobAplicacion> GetListJobAplicacions()
+        public List<JobAplication> GetListJobAplicacions()
         {
             return jobAplicationDAL.GetListJobAplicacions();
         }
 
-        public JobAplicacion GetJobAplicacion(JobAplicacion pJobAplicacion)
+        public JobAplication GetJobAplicacion(int id)
         {
-            return jobAplicationDAL.GetJobAplicacion(pJobAplicacion);
+            return jobAplicationDAL.GetJobAplicacion(id);
         }
 
-        public void InsertJobAplicacion(JobAplicacion pJobAplicacion)
+        public void InsertJobAplicacion(JobAplication pJobAplicacion)
         {
             jobAplicationDAL.InsertJobAplicacion(pJobAplicacion);
         }
 
-        public void UpdateJobAplicacion(JobAplicacion pJobAplicacion)
+        public void UpdateJobAplicacion(JobAplication pJobAplicacion)
         {
             this.jobAplicationDAL.UpdateJobAplicacion(pJobAplicacion);
         }
-    }
+
+        public void DeleteJobAplicacion(int id_job)
+        {
+            this.jobAplicationDAL.DeleteJobAplicacion(id_job);
+        }
+
+        }
 }

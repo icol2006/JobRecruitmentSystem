@@ -16,9 +16,9 @@ namespace AppJobRecruitmentSystem.BAL
             return companyDAL.GetListCompanies();
         }
 
-        public Company GetCompany(Company pCompany)
+        public Company GetCompany(String id)
         {
-            return companyDAL.GetCompany(pCompany);
+            return companyDAL.GetCompany(id);
         }
 
         public void InsertCompany(Company pCompany)

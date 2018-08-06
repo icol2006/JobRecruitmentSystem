@@ -27,9 +27,12 @@ namespace AppJobRecruitmentSystem.DAL
                     Job Job = new Job();
                     Job.id = Convert.ToInt32(dataReader["id"].ToString());
                     Job.id_company = (dataReader["company_id"].ToString());
+                    Job.name = dataReader["name"].ToString();
                     Job.description = dataReader["description"].ToString();
                     Job.date_publication =Convert.ToDateTime(dataReader["date_publication"].ToString());
                     Job.enable_job =(Boolean) Convert.ToBoolean(dataReader["enable_job"]);
+                    Job.id_category = Convert.ToInt32(dataReader["id_category"]);
+
 
                     listJobs.Add(Job);
                 }
@@ -46,13 +49,13 @@ namespace AppJobRecruitmentSystem.DAL
             return listJobs;
         }
 
-        public Job GetJob(Job pJob)
+        public Job GetJob(int? id)
         {
             Job Job = new Job();
             var parameters = new List<SqlParameter>();
             SqlConnection connection = new SqlConnection();
 
-            parameters.Add(dbManager.CreateParameter("@id", pJob.id, DbType.Int32));
+            parameters.Add(dbManager.CreateParameter("@id", id, DbType.Int32));
 
             SqlDataReader dataReader = dbManager.GetDataReader("sp_GetJob", CommandType.StoredProcedure, parameters.ToArray(), out connection);
 
@@ -62,9 +65,12 @@ namespace AppJobRecruitmentSystem.DAL
                 {
                     Job.id = Convert.ToInt32(dataReader["id"].ToString());
                     Job.id_company = (dataReader["company_id"].ToString());
+                    Job.name = (dataReader["name"].ToString());
                     Job.description = dataReader["description"].ToString();
                     Job.date_publication = Convert.ToDateTime(dataReader["date_publication"].ToString());
                     Job.enable_job = (Boolean)Convert.ToBoolean(dataReader["enable_job"]);
+                    Job.id_category = Convert.ToInt32(dataReader["id_category"]);
+
                 }
             }
             catch (Exception)
@@ -86,10 +92,12 @@ namespace AppJobRecruitmentSystem.DAL
             try
             {
                 parameters.Add(dbManager.CreateParameter("@company_id", pJob.id_company, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@name", pJob.description == null ? "" : pJob.name, DbType.String));
                 parameters.Add(dbManager.CreateParameter("@description", pJob.description == null ? "" : pJob.description, DbType.String));
                 parameters.Add(dbManager.CreateParameter("@date_publication", pJob.date_publication, DbType.Date));
                 parameters.Add(dbManager.CreateParameter("@enable_job", pJob.enable_job, DbType.Boolean));
-
+                parameters.Add(dbManager.CreateParameter("@id_category", pJob.id_category, DbType.Int32));
+                
                 dbManager.ExecuteNonQuery("sp_AddJob", CommandType.StoredProcedure, parameters.ToArray());
             }
             catch (Exception ex) { }
@@ -105,14 +113,35 @@ namespace AppJobRecruitmentSystem.DAL
             {
                 parameters.Add(dbManager.CreateParameter("@id", pJob.id, DbType.Int16));
                 parameters.Add(dbManager.CreateParameter("@company_id", pJob.id_company, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@name", pJob.description == null ? "" : pJob.name, DbType.String));
                 parameters.Add(dbManager.CreateParameter("@description", pJob.description == null ? "" : pJob.description, DbType.String));
                 parameters.Add(dbManager.CreateParameter("@date_publication", pJob.date_publication, DbType.Date));
                 parameters.Add(dbManager.CreateParameter("@enable_job", pJob.enable_job, DbType.Boolean));
+                parameters.Add(dbManager.CreateParameter("@id_category", pJob.id_category, DbType.Int32));
 
                 dbManager.ExecuteNonQuery("sp_UpdateJob", CommandType.StoredProcedure, parameters.ToArray());
             }
             catch (Exception ex) { }
 
         }
+
+        public void DeleteJob(int id_job)
+        {
+
+            var parameters = new List<SqlParameter>();
+            SqlConnection connection = new SqlConnection();
+
+            try
+            {
+                parameters.Add(dbManager.CreateParameter("@id", id_job, DbType.Int32));
+                dbManager.ExecuteNonQuery("sp_DeleteJob", CommandType.StoredProcedure, parameters.ToArray());
+
+            }
+            catch (Exception ex)
+            {
+            }
+
+        }
+
     }
 }

@@ -9,59 +9,93 @@ using System.Web.Mvc;
 using AppJobRecruitmentSystem.Entities;
 using AppJobRecruitmentSystem.Models;
 using AppJobRecruitmentSystem.BAL;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
+    
     public class JobsController : Controller
     {
         private JobBAL db = new JobBAL();
 
-
         // GET: Jobs
         public ActionResult Index()
         {
-            List<Job> list = db.GetListJobs();
+            List<Job> listCompanies = new List<Job>();
+            String idUser = null;
 
-            for (int i = 0; i < list.Count; i++)
+            if(User.Identity.IsAuthenticated)
             {
-                list[i].company = new CompanyBAL().GetCompany(new Company(list[i].id_company, "", ""));
+                idUser = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                 .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
             }
-            return View(list);
+
+
+            if (User.IsInRole("company"))
+            {
+
+                listCompanies = db.GetListJobs().FindAll(x => x.id_company == idUser);
+            }
+            else
+            {
+                listCompanies = db.GetListJobs();
+            }
+
+
+            for (int i = 0; i < listCompanies.Count; i++)
+            {
+                listCompanies[i].company = new CompanyBAL().GetCompany(listCompanies[i].id_company);
+                listCompanies[i].category = new CategoryBAL().GetCategory(listCompanies[i].id_category);
+            }
+
+
+            ViewBag.iduser = idUser;
+
+            return View(listCompanies);
         }
 
-        public ActionResult JobsbyCompany(String id_company)
+        // GET: Jobs
+        public ActionResult GetJobsByCompany()
         {
-            List<Job> list = db.GetListJobs();
 
-            for (int i = 0; i < list.Count; i++)
+            List<Job> listCompanies = new List<Job>();
+
+            if (User.IsInRole(Rol.company.ToString()))
             {
-                list[i].company = new CompanyBAL().GetCompany(new Company(list[i].id_company, "", ""));
+                String idCompany = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                                   .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
+                listCompanies = db.GetListJobs().FindAll(x => x.id_company == idCompany);
+            }
+            else 
+            {
+                listCompanies = db.GetListJobs();
+            }
+         
+
+            for (int i = 0; i < listCompanies.Count; i++)
+            {
+                listCompanies[i].company = new CompanyBAL().GetCompany(listCompanies[i].id_company);
             }
 
-            list=  list.FindAll(x=>x.id_company== id_company).ToList();
-            return View("Index", list);
+            return View(listCompanies);
         }
 
-        // GET: Jobs/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Job job =new Job();
-            job.id = (int)id;
-            job = db.GetJob(job);
-            if (job == null)
-            {
-                return HttpNotFound();
-            }
-            return View(job);
-        }
 
         // GET: Jobs/Create
         public ActionResult Create()
         {
+            List<Category> listCategories = new List<Category>();
+            String idCompany = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
+            .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
+
+            Job job = new Job();
+            job.company=new CompanyBAL().GetCompany(idCompany);
+
+            //ViewBag.IdCompany = idCompany;
+            //SelectListItem basetypes = new SelectListItem(new CompanyBAL().GetCompany(idCompany),"id","name" );
+            //SelectList li=new SelectList(new CategoryBAL().GetListCategories(), "id", "name");
+            ViewData["id_category"] = new SelectList(new CategoryBAL().GetListCategories(), "id", "name");
+
             return View();
         }
 
@@ -70,13 +104,20 @@ namespace AppJobRecruitmentSystem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,description,date_publication,enable_job,id_company")] Job job)
+        public ActionResult Create([Bind(Include = "id,name,description,date_publication,enable_job,id_company,id_category")] Job job)
         {
+            String idCompany = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
+            job.id_company = idCompany;
+            ModelState.Remove("id_company");
+
             if (ModelState.IsValid)
             {
                 db.InsertJob(job);
                 return RedirectToAction("Index");
             }
+
+            ViewData["id_category"] = new SelectList(new CategoryBAL().GetListCategories(), "id", "name");
 
             return View(job);
         }
@@ -88,13 +129,14 @@ namespace AppJobRecruitmentSystem.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = new Job();
-            job.id = (int)id;
-            job = db.GetJob(job);
+            Job job = db.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
             }
+            int idCategory = new JobBAL().GetJob(id).id_category;
+            ViewBag.id_category = new SelectList(new CategoryBAL().GetListCategories(), "id", "name", idCategory);
+           
             return View(job);
         }
 
@@ -103,41 +145,52 @@ namespace AppJobRecruitmentSystem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,description,date_publication,enable_job,id_company")] Job job)
+        public ActionResult Edit([Bind(Include = "id,name,description,date_publication,enable_job,id_company,id_category")] Job job)
         {
             if (ModelState.IsValid)
             {
                 db.UpdateJob(job);
                 return RedirectToAction("Index");
             }
+
+            int idCategory = job.id_category;
+            ViewBag.id_category = new SelectList(new CategoryBAL().GetListCategories(), "id", "name", idCategory);
+
             return View(job);
         }
 
         // GET: Jobs/Delete/5
-        /*public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Job job = db.Jobs.Find(id);
+            }            Job job=db.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
             }
             return View(job);
-        }*/
+        }
 
         // POST: Jobs/Delete/5
-        /*[HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Job job = db.Jobs.Find(id);
-            db.Jobs.Remove(job);
-            db.SaveChanges();
+            db.DeleteJob(id);
             return RedirectToAction("Index");
-        }*/
+        }
+
+        public ActionResult SendResume(int? id,String id_candidate, int? id_job,DateTime dateofaplication)
+        {
+            if(id==null || id_job==null)
+            {
+                RedirectToAction("Index");
+            }
+
+             return RedirectToAction("Create", " JobAplications", new { id = 0, id_candidate = ViewBag.iduser, id_job = id_job, dateofaplication = System.DateTime.Now });
+        }
 
         /*protected override void Dispose(bool disposing)
         {

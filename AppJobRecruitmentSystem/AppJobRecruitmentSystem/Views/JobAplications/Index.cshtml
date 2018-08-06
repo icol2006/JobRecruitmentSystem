@@ -1,0 +1,75 @@
+﻿@model IEnumerable<AppJobRecruitmentSystem.Entities.JobAplication>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+<table class="table">
+    <tr>
+        <th>        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.candidate.firtsname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.candidate.identification)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.candidate.resume)
+        </th>
+        <th>        </th>
+        <th>  Empresa      </th>
+        <th>
+            @Html.DisplayNameFor(model => model.job.description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.job.date_publication)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dateofaplication)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.HiddenFor(modelItem => item.id_candidate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.candidate.firtsname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.candidate.identification)            
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.candidate.resume)
+        </td>
+        <td>
+            @Html.HiddenFor(modelItem => item.id_job)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.job.company.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.job.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.job.date_publication)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dateofaplication)
+        </td>
+        <td>
+            @if (User.IsInRole("administrator") || User.IsInRole("company"))
+            {
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.id })
+            }
+        </td>
+    </tr>
+}
+
+</table>

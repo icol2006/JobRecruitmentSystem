@@ -170,8 +170,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="BAL\CandidateBAL.cs" />
+    <Compile Include="BAL\CategoryBAL.cs" />
     <Compile Include="BAL\CompanyBAL.cs" />
-    <Compile Include="BAL\Job.cs" />
+    <Compile Include="BAL\JobBAL.cs" />
     <Compile Include="BAL\JobAplicationBAL.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CandidatesController.cs" />
@@ -180,12 +181,14 @@
     <Compile Include="Controllers\JobAplicacionsController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DAL\CategoryDAL.cs" />
     <Compile Include="DAL\CompanyDAL.cs" />
     <Compile Include="DAL\JobAplicationDAL.cs" />
     <Compile Include="DAL\JobDAL.cs" />
     <Compile Include="DAL\SqlHelper.cs" />
     <Compile Include="DAL\CandidateDAL.cs" />
     <Compile Include="Entities\Candidate.cs" />
+    <Compile Include="Entities\Category.cs" />
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\Job.cs" />
     <Compile Include="Entities\JobAplicacion.cs" />
@@ -207,12 +210,19 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Models\JavaScript.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -270,13 +280,14 @@
     <Content Include="Views\Jobs\Details.cshtml" />
     <Content Include="Views\Jobs\Edit.cshtml" />
     <Content Include="Views\Jobs\Index.cshtml" />
-    <Content Include="Views\JobAplicacions\Create.cshtml" />
-    <Content Include="Views\JobAplicacions\Delete.cshtml" />
-    <Content Include="Views\JobAplicacions\Details.cshtml" />
-    <Content Include="Views\JobAplicacions\Edit.cshtml" />
-    <Content Include="Views\JobAplicacions\Index.cshtml" />
+    <Content Include="Views\JobAplications\Create.cshtml" />
+    <Content Include="Views\JobAplications\Delete.cshtml" />
+    <Content Include="Views\JobAplications\Details.cshtml" />
+    <Content Include="Views\JobAplications\Edit.cshtml" />
+    <Content Include="Views\JobAplications\Index.cshtml" />
     <Content Include="Views\Account\RegisterCandidate.cshtml" />
     <Content Include="Views\Account\RegisterCompany.cshtml" />
+    <Content Include="Views\Jobs\GetJobsByCompany.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -287,7 +298,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

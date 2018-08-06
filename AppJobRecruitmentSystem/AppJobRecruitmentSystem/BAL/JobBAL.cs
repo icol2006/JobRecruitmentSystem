@@ -16,19 +16,25 @@ namespace AppJobRecruitmentSystem.BAL
             return this.jobDAL.GetListJobs();
         }
 
-        public Job GetJob(Job pJob)
+        public Job GetJob(int? id)
         {
-            return this.jobDAL.GetJob(pJob);
+            return this.jobDAL.GetJob(id);
         }
 
         public void InsertJob(Job pJob)
         {
-             this.jobDAL.InsertJob(pJob);
+            this.jobDAL.InsertJob(pJob);
         }
 
         public void UpdateJob(Job pJob)
         {
             this.jobDAL.UpdateJob(pJob);
         }
+
+        public void DeleteJob(int id_job)
+        {
+            this.jobDAL.DeleteJob(id_job);
+        }
+
     }
 }

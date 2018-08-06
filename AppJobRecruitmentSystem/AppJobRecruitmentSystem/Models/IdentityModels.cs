@@ -32,12 +32,16 @@ namespace AppJobRecruitmentSystem.Models
 
         public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Candidate> Candidates { get; set; }
 
+        public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Job> Jobs { get; set; }
+
+        public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.JobAplication> JobAplications { get; set; }
+
         /* public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Candidate> Candidates { get; set; }
 
          public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Company> Companies { get; set; }
 
          public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.Job> Jobs { get; set; }
 
-         public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.JobAplicacion> JobAplicacions { get; set; }*/
+         public System.Data.Entity.DbSet<AppJobRecruitmentSystem.Entities.JobAplication> JobAplicacions { get; set; }*/
     }
 }

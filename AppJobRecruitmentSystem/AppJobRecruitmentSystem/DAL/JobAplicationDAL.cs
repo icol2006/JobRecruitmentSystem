@@ -12,9 +12,9 @@ namespace AppJobRecruitmentSystem.DAL
     {
         SqlHelper dbManager = new SqlHelper();
 
-        public List<JobAplicacion> GetListJobAplicacions()
+        public List<JobAplication> GetListJobAplicacions()
         {
-            List<JobAplicacion> listJobAplicacions = new List<JobAplicacion>();
+            List<JobAplication> listJobAplicacions = new List<JobAplication>();
 
             SqlConnection connection = new SqlConnection();
             SqlDataReader dataReader = dbManager.GetDataReader("sp_GetListJobAplication", CommandType.StoredProcedure, null, out connection);
@@ -24,7 +24,7 @@ namespace AppJobRecruitmentSystem.DAL
 
                 while (dataReader.Read())
                 {
-                    JobAplicacion JobAplicacion = new JobAplicacion();
+                    JobAplication JobAplicacion = new JobAplication();
                     JobAplicacion.id = Convert.ToInt32(dataReader["id"].ToString());
                     JobAplicacion.id_job = Convert.ToInt32(dataReader["id_job"].ToString());
                     JobAplicacion.id_candidate = dataReader["id_candidate"].ToString();
@@ -45,13 +45,13 @@ namespace AppJobRecruitmentSystem.DAL
             return listJobAplicacions;
         }
 
-        public JobAplicacion GetJobAplicacion(JobAplicacion pJobAplicacion)
+        public JobAplication GetJobAplicacion(int id)
         {
-            JobAplicacion JobAplicacion = new JobAplicacion();
+            JobAplication JobAplicacion = new JobAplication();
             var parameters = new List<SqlParameter>();
             SqlConnection connection = new SqlConnection();
 
-            parameters.Add(dbManager.CreateParameter("@id", pJobAplicacion.id, DbType.Int32));
+            parameters.Add(dbManager.CreateParameter("@id", id, DbType.Int32));
 
             SqlDataReader dataReader = dbManager.GetDataReader("sp_GetJobAplication", CommandType.StoredProcedure, parameters.ToArray(), out connection);
 
@@ -78,7 +78,7 @@ namespace AppJobRecruitmentSystem.DAL
             return JobAplicacion;
         }
 
-        public void InsertJobAplicacion(JobAplicacion pJobAplicacion)
+        public void InsertJobAplicacion(JobAplication pJobAplicacion)
         {
             var parameters = new List<SqlParameter>();
 
@@ -97,7 +97,7 @@ namespace AppJobRecruitmentSystem.DAL
 
         }
 
-        public void UpdateJobAplicacion(JobAplicacion pJobAplicacion)
+        public void UpdateJobAplicacion(JobAplication pJobAplicacion)
         {
             var parameters = new List<SqlParameter>();
 
@@ -114,6 +114,23 @@ namespace AppJobRecruitmentSystem.DAL
             {
 
                
+            }
+
+        }
+
+        public void DeleteJobAplicacion(int? id_job)
+        {
+            var parameters = new List<SqlParameter>();
+            SqlConnection connection = new SqlConnection();
+
+            try
+            {
+                parameters.Add(dbManager.CreateParameter("@id", id_job, DbType.Int32));
+                dbManager.ExecuteNonQuery("sp_DeleteJobAplication", CommandType.StoredProcedure, parameters.ToArray());
+
+            }
+            catch (Exception ex)
+            {
             }
 
         }

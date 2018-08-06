@@ -12,6 +12,9 @@ using AppJobRecruitmentSystem.BAL;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
+using System.Web.Security;
+using Microsoft.AspNet.Identity;
+using System.Security.Claims;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -22,14 +25,9 @@ namespace AppJobRecruitmentSystem.Controllers
         // GET: Companies
         public ActionResult Index()
         {
-            Company c = new Company();
-            c.id = "1e9bbaad-9d56-4d0f-b05f-fbfcc0a0f534";
-            c.name = "name";
-            c.Description = "description";
-            db.UpdateCompany(c);
-            var sd = db.GetCompany(c);
-            var ds = db.GetListCompanies();
-            return View(ds);
+
+
+            return View(db.GetListCompanies());
         }
 
         // GET: Companies/Details/5
@@ -40,8 +38,7 @@ namespace AppJobRecruitmentSystem.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Company company = new Company();
-            company.id = id;
-            company = db.GetCompany(company);
+            company = db.GetCompany(id);
             if (company == null)
             {
                 return HttpNotFound();
@@ -153,8 +150,7 @@ namespace AppJobRecruitmentSystem.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Company company = new Company();
-            company.id = id;
-            company = db.GetCompany(company);
+            company = db.GetCompany(id);
             if (company == null)
             {
                 return HttpNotFound();

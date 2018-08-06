@@ -205,12 +205,11 @@ namespace AppJobRecruitmentSystem.Controllers
                 try
                 {
                     var result = await UserManager.CreateAsync(user, model.Password);
-
                     if (result.Succeeded)
                     {
                         await UserManager.AddToRoleAsync(user.Id, "candidate");
 
-                        new CandidateBAL().InsertCandidate(new Candidate(user.Id, Rol.Candidate, model.FirstName, 
+                        new CandidateBAL().InsertCandidate(new Candidate(user.Id, Rol.candidate, model.FirstName, 
                           model.LastName, model.identification, model.Resume));
 
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);

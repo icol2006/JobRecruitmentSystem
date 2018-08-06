@@ -9,24 +9,44 @@ using System.Web.Mvc;
 using AppJobRecruitmentSystem.Entities;
 using AppJobRecruitmentSystem.Models;
 using AppJobRecruitmentSystem.BAL;
+using System.Net.Mime;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
-    public class JobAplicacionsController : Controller
+    public class JobAplicationsController : Controller
     {
         private JobAplicationBAL db = new JobAplicationBAL();
 
         // GET: JobAplicacions
         public ActionResult Index()
         {
-            List<JobAplicacion> list = db.GetListJobAplicacions();
+            List<JobAplication> list = db.GetListJobAplicacions();
+            String idUser = "";
 
             for (int i = 0; i < list.Count; i++)
             {
-                list[i].candidate = new CandidateBAL().GetCandidate(new Candidate(list[i].id_candidate,Rol.Candidate,"","",0,""));
-                list[i].job = new JobBAL().GetJob(new Job(list[i].id_job, "", Convert.ToDateTime("10/10/2000"), false, ""));
-                
+                list[i].candidate = new CandidateBAL().GetCandidate(new Candidate(list[i].id_candidate,Rol.candidate,"","",0,""));
+                list[i].job = new JobBAL().GetJob(list[i].id_job);
+                list[i].job.company = new CompanyBAL().GetCompany(list[i].job.id_company);
             }
+
+            if (User.Identity.IsAuthenticated)
+            {
+                idUser = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                    .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
+            }
+
+            if (User.IsInRole("company"))
+            {
+                list = list.FindAll(x => x.job.id_company == idUser).ToList();
+            }
+            if (User.IsInRole("candidate"))
+            {
+                list = list.FindAll(x => x.id_candidate == idUser).ToList();
+            }
+
+
             return View(list);
         }
 
@@ -37,9 +57,8 @@ namespace AppJobRecruitmentSystem.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            JobAplicacion jobAplicacion = new JobAplicacion();
-            jobAplicacion.id = (int)id;
-            jobAplicacion = db.GetJobAplicacion(jobAplicacion);
+            JobAplication jobAplicacion = new JobAplication();
+            jobAplicacion = db.GetJobAplicacion((int) id);
             if (jobAplicacion == null)
             {
                 return HttpNotFound();
@@ -57,16 +76,32 @@ namespace AppJobRecruitmentSystem.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,id_candidate,id_job,dateofaplication")] JobAplicacion jobAplicacion)
+        public ActionResult Create([Bind(Include = "id,id_candidate,id_job,dateofaplication")] JobAplication jobAplicacion)
         {
+
             if (ModelState.IsValid)
             {
                 db.InsertJobAplicacion(jobAplicacion);
-                return RedirectToAction("Index");
+                return Json(new { success = true, responseText = "Tu curriculum ha sido enviado!" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { success = false, responseText = "Error al enviar el curriculum" }, JsonRequestBehavior.AllowGet);
             }
 
-            return View(jobAplicacion);
+        }
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(int? id, String id_candidate, int? id_job,DateTime dateofaplication)
+        {
+            JobAplication JobAplicacion = new JobAplication();
+            JobAplicacion.id_candidate = id_candidate;
+            JobAplicacion.id_job =(int) id_job;
+            JobAplicacion.dateofaplication = dateofaplication;
+
+            db.InsertJobAplicacion(JobAplicacion);
+            return RedirectToAction("Index", " Jobs", null);
         }
 
         // GET: JobAplicacions/Edit/5
@@ -76,9 +111,8 @@ namespace AppJobRecruitmentSystem.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            JobAplicacion jobAplicacion = new JobAplicacion();
-            jobAplicacion.id = (int)id;
-            jobAplicacion = db.GetJobAplicacion(jobAplicacion);
+            JobAplication jobAplicacion = new JobAplication();
+            jobAplicacion = db.GetJobAplicacion((int) id);
 
             if (jobAplicacion == null)
             {
@@ -92,7 +126,7 @@ namespace AppJobRecruitmentSystem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,id_candidate,id_job,dateofaplication")] JobAplicacion jobAplicacion)
+        public ActionResult Edit([Bind(Include = "id,id_candidate,id_job,dateofaplication")] JobAplication jobAplicacion)
         {
             if (ModelState.IsValid)
             {
@@ -103,30 +137,28 @@ namespace AppJobRecruitmentSystem.Controllers
         }
 
         // GET: JobAplicacions/Delete/5
-       /* public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            JobAplicacion jobAplicacion = db.JobAplicacions.Find(id);
+            JobAplication jobAplicacion = db.GetJobAplicacion((int)id);
             if (jobAplicacion == null)
             {
                 return HttpNotFound();
             }
             return View(jobAplicacion);
-        }*/
+        }
 
         // POST: JobAplicacions/Delete/5
-       /* [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            JobAplicacion jobAplicacion = db.JobAplicacions.Find(id);
-            db.JobAplicacions.Remove(jobAplicacion);
-            db.SaveChanges();
+            db.DeleteJobAplicacion(id);
             return RedirectToAction("Index");
-        }*/
+        }
 
         /*protected override void Dispose(bool disposing)
         {

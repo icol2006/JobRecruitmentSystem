@@ -27,14 +27,13 @@ namespace AppJobRecruitmentSystem.DAL
                     Company Company = new Company(); 
                     Company.id = dataReader["id"].ToString();
                     Company.name = dataReader["Name"].ToString();
-                    Company.email = dataReader["email"].ToString();
                     Company.rol = (Rol)Convert.ToInt32(dataReader["rol"].ToString());
                     Company.Description = dataReader["Description"].ToString();
 
                     listCompanies.Add(Company);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
             finally
@@ -46,13 +45,13 @@ namespace AppJobRecruitmentSystem.DAL
             return listCompanies;
         }
 
-        public Company GetCompany(Company pCompany)
+        public Company GetCompany(String id)
         {
             Company Company = new Company();
             var parameters = new List<SqlParameter>();
             SqlConnection connection = new SqlConnection();
 
-            parameters.Add(dbManager.CreateParameter("@id", pCompany.id, DbType.String));
+            parameters.Add(dbManager.CreateParameter("@id", id, DbType.String));
 
             SqlDataReader dataReader = dbManager.GetDataReader("sp_GetCompany", CommandType.StoredProcedure, parameters.ToArray(), out connection);
 
