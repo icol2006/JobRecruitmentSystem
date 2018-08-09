@@ -22,6 +22,7 @@ namespace AppJobRecruitmentSystem.Entities
 
         [Required]
         [Display(Name = "Fecha publicacion")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime date_publication { get; set; }
 
         [Required]

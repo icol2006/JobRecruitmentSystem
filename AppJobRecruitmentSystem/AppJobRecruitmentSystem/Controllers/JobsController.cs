@@ -10,18 +10,81 @@ using AppJobRecruitmentSystem.Entities;
 using AppJobRecruitmentSystem.Models;
 using AppJobRecruitmentSystem.BAL;
 using Microsoft.AspNet.Identity.Owin;
+using PagedList;
 
 namespace AppJobRecruitmentSystem.Controllers
-{
-    
+{ 
     public class JobsController : Controller
     {
         private JobBAL db = new JobBAL();
 
-        // GET: Jobs
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string CurrentSort, int? page,
+             string currentFilter, string searchString)
         {
-            List<Job> listCompanies = new List<Job>();
+            int pageSize = 6;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            List<Job> listJobs = new List<Job>();
+            String idUser = null;
+
+            ViewBag.CurrentSort = sortOrder;
+
+            sortOrder = String.IsNullOrEmpty(sortOrder) ? "date_publication" : sortOrder;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+
+            listJobs = db.GetListJobs();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                listJobs = db.GetListJobs().Where(x => x.name.ToUpper()
+                .Contains(searchString.ToUpper())).ToList();
+            }
+
+
+            if (User.Identity.IsAuthenticated)
+            {
+                idUser = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                 .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
+            }
+          
+
+            if (User.IsInRole("company"))
+            {
+                listJobs = listJobs.FindAll(x => x.id_company == idUser);
+            }
+
+            
+            for (int i = 0; i < listJobs.Count; i++)
+            {
+                listJobs[i].company = new CompanyBAL().GetCompany(listJobs[i].id_company);
+                listJobs[i].category = new CategoryBAL().GetCategory(listJobs[i].id_category);
+            }
+
+            IPagedList<Job> jobs = null;
+
+            jobs = listJobs.OrderBy
+                (m => m.date_publication).ToPagedList(pageIndex, pageSize);
+
+            ViewBag.iduser = idUser;
+
+            return View(jobs);
+        }
+
+        // GET: Jobs
+        public ActionResult Index2()
+        {
+            List<Job> listJobs = new List<Job>();
             String idUser = null;
 
             if(User.Identity.IsAuthenticated)
@@ -34,24 +97,24 @@ namespace AppJobRecruitmentSystem.Controllers
             if (User.IsInRole("company"))
             {
 
-                listCompanies = db.GetListJobs().FindAll(x => x.id_company == idUser);
+                listJobs = db.GetListJobs().FindAll(x => x.id_company == idUser);
             }
             else
             {
-                listCompanies = db.GetListJobs();
+                listJobs = db.GetListJobs();
             }
 
 
-            for (int i = 0; i < listCompanies.Count; i++)
+            for (int i = 0; i < listJobs.Count; i++)
             {
-                listCompanies[i].company = new CompanyBAL().GetCompany(listCompanies[i].id_company);
-                listCompanies[i].category = new CategoryBAL().GetCategory(listCompanies[i].id_category);
+                listJobs[i].company = new CompanyBAL().GetCompany(listJobs[i].id_company);
+                listJobs[i].category = new CategoryBAL().GetCategory(listJobs[i].id_category);
             }
 
 
             ViewBag.iduser = idUser;
 
-            return View(listCompanies);
+            return View(listJobs);
         }
 
         // GET: Jobs

@@ -67,3 +67,7 @@ C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\obj\Debug\AppJobRecruitmentSystem.dll
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\obj\Debug\AppJobRecruitmentSystem.pdb
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\obj\Debug\AppJobRecruitmentSystem.csprojResolveAssemblyReference.cache
+C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\PagedList.dll
+C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\PagedList.Mvc.dll
+C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\PagedList.xml
+C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\PagedList.Mvc.xml

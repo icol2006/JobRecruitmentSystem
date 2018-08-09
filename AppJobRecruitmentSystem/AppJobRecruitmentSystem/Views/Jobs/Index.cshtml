@@ -1,185 +1,246 @@
-﻿@model IEnumerable<AppJobRecruitmentSystem.Entities.Job>
+﻿@model PagedList.IPagedList<AppJobRecruitmentSystem.Entities.Job>
+
+@using PagedList.Mvc;
+
 <script src="∼/Scripts/jquery.unobtrusive-ajax.js"></script>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Listado de Trabajos";
 }
 
-<h2>Index</h2>
+<h2>Listado de Trabajos</h2>
 @{ 
 }
 <p>
-    @if ( User.IsInRole("company"))
-    {
-        @Html.ActionLink("Create New", "Create")
-    }
+
 
 </p>
-<table class="table">
-    <tr>
-        @if (!User.IsInRole("company"))
-        {
-            <th>
-                Empresa
-            </th>
-        }
-        <th>
-            @Html.DisplayNameFor(model => model.name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.date_publication)
-        </th>
-        @if (User.IsInRole("administrator") || User.IsInRole("company"))
-        {
-            <th>
-                @Html.DisplayNameFor(model => model.enable_job)
-            </th>
-        }
-        @if (User.IsInRole("candidate"))
-        {
-            <th>
-              
-            </th>
-        }
-        <th>
-            @Html.DisplayNameFor(model => model.category.name)
-        </th>
 
-        <th></th>
-        <th></th>
-    </tr>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Filtro</h5>                   
+                        @using (Html.BeginForm("Index", "Jobs", FormMethod.Get))
+                        {
+                            <p>
+                                Buscar por puesto: 
+                                <br />
+                                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+                                <br />
+                                <br />
+                                <input type="submit" value="Search" />
+                            </p>
+                        }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 col-lg-9">
 
-@foreach (var item in Model)
-{
-    if (item.enable_job.Equals(true) || (User.IsInRole("administrator") || User.IsInRole("company")))
-    {
-        <tr>
-            @if (!User.IsInRole("company"))
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.company.name)
-                </td>
-            }
-            <td>
-                @Html.DisplayFor(modelItem => item.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.description, new { id = "description" })
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.date_publication)
-            </td>
-            @if (User.IsInRole("administrator") || User.IsInRole("company"))
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.enable_job)
-                </td>
-            }
-            <td>
-                @Html.DisplayFor(modelItem => item.category.name)
-            </td>
-            @if (User.IsInRole("candidate"))
-            {
-                <th>
+            <div class="areaAdministradores ">
+                @if (User.IsInRole("company"))
+                {
+                    @Html.ActionLink("Crear nuevo", "Create")
+                    <br />
+                }
+                @if (User.IsInRole("administrator") || User.IsInRole("company"))
+                {
+                    <table class="table">
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            @if (!User.IsInRole("company"))
+                            {
+                                <th>
+                                    Empresa
+                                </th>
+                            }
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().date_publication)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().enable_job)
+                            </th>
 
-                    <button class=enviar> Enviar Curriculum </button>
+                            @if (User.IsInRole("candidate"))
+                            {
+                                <th>
 
-                </th>
-            }
-            @if (User.IsInRole("administrator") || User.IsInRole("company"))
-            {
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.id }) |
-                    @Html.ActionLink("Eliminar", "Delete", new { id = item.id })
-                </td>
-            }
+                                </th>
+                            }
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().category.name)
+                            </th>
 
-            <td>
-                @Html.Hidden("Iduser", (string)ViewBag.iduser)
-                @Html.HiddenFor(modelItem => item.id)
-                @Html.HiddenFor(modelItem => item.id_category)
-            </td>
+                            <th></th>
+                        </tr>
 
-        </tr>
-        ;
-    }
+                        @foreach (var item in Model)
+                        {
 
 
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.id)
+                                </td>
+                                @if (!User.IsInRole("company"))
+                    {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.company.name)
+                                    </td>
+                                }
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.date_publication)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.enable_job)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.category.name)
+                                </td>
+
+                                <td>
+                                    @Html.ActionLink("Editar", "Edit", new { id = item.id }) |
+                                    @Html.ActionLink("Eliminar", "Delete", new { id = item.id })
+                                </td>
+
+                                <td>
+                                    @Html.Hidden("Iduser", (string)ViewBag.iduser)
+                                    @Html.HiddenFor(modelItem => item.id)
+                                    @Html.HiddenFor(modelItem => item.id_category)
+                                </td>
+
+                            </tr>
+                            ;
+
+                        }
+                    </table>
+                }
+            </div>
+
+            <div class="areaCandidatos">
+                @if (User.IsInRole("candidate") || !User.Identity.IsAuthenticated)
+                {
+                    foreach (var item in Model)
+                    {
+                        if (item.enable_job.Equals(true) || (User.IsInRole("administrator") || User.IsInRole("company")))
+                        {
+                            <div class="card card-body">
+                                <h5 class="card-title">@Html.DisplayFor(modelItem => item.name)</h5>
+                                <hr />
+                                <h5>@Html.DisplayFor(modelItem => item.company.name)</h5>
+                                <p class="card-text">@Html.DisplayFor(modelItem => item.description, new { id = "description" })</p>
+                                @if (User.IsInRole("candidate"))
+                                {
+                                    <a href="#" class="card-link enviar"> Enviar Curriculum </a>
+                                }
+                                <h7 style="text-align:right;">Fecha Publicacion</h7>
+                                <h7 style="text-align:right;">@Html.DisplayFor(modelItem => item.date_publication)</h7>
 
 
-
-
-
-}
-
-
-
-</table>
-
-
-
-@section Scripts {
-    <script>
-
-        var id_company = "";
-        var Iduser = "";
-
-        $(".enviar").click(function () {
-            var $row = $(this).closest("tr"),       // Finds the closest row <tr> 
-                $tds = $row.find("td");             // Finds all children <td> elements
-
-            id_company = $tds.find("#item_id").val();
-            Iduser = $tds.find("#Iduser").val();
-            var das = 1 + 1;
-        });
-
-
-        $(function () {
-            
-            $(".enviar").click(function () {
-
-                var jobAplicacion = {};
-                jobAplicacion.id_candidate = Iduser;
-                jobAplicacion.id_job = id_company;
-                jobAplicacion.dateofaplication = getDate();
-
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("Create","JobAplications")',
-                    data: '{jobAplicacion: ' + JSON.stringify(jobAplicacion) + '}',
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (Message) {
-                        alert(Message.responseText);
-                      
-                    },
-                    error: function (Message) {
-                        alert(Message.responseText);
+                                @Html.Hidden("Iduser", (string)ViewBag.iduser)
+                                @Html.HiddenFor(modelItem => item.id)
+                                @Html.HiddenFor(modelItem => item.id_category)
+                            </div>
+                            <br />
+                                 }
                     }
+                }
+            </div>
+
+            <div id='pagination' style="text-align: center">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                of @Model.PageCount
+
+                <nav aria-label="Page navigation example">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+    @section Scripts {
+        <script>
+
+            $(function () {
+
+                $("#btnjobname").click(function () {
+                    alert("asdl");
                 });
-                return false;
+
+                    $("#btnjobname").click(function () {
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Action("Index","Jobs")',
+                            data: { jobname: "Mesero" },
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            success: function (Message) {
+                                alert(Message.responseText);
+
+                            },
+                            error: function (Message) {
+                                alert(Message.responseText);
+                            }
+                        });
+                        return false;
+                    });
+
+
+
+                $(".enviar").click(function () {
+
+                    var jobAplicacion = {};
+                    jobAplicacion.id_candidate = $(this).closest(".card-body").find("#Iduser").val();
+                    jobAplicacion.id_job = $(this).closest(".card-body").find("#item_id").val();
+                    jobAplicacion.dateofaplication = getDate();
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Create","JobAplications")',
+                        data: '{jobAplicacion: ' + JSON.stringify(jobAplicacion) + '}',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (Message) {
+                            alert(Message.responseText);
+
+                        },
+                        error: function (Message) {
+                            alert(Message.responseText);
+                        }
+                    });
+                    return false;
+                });
             });
-        });
 
-        function  getDate()
-        {
-            var d = new Date();
+            function getDate() {
+                var d = new Date();
 
-            var month = d.getMonth() + 1;
-            var day = d.getDate();
+                var month = d.getMonth() + 1;
+                var day = d.getDate();
 
-            var output = d.getFullYear() + '/' +
-                (month < 10 ? '0' : '') + month + '/' +
-                (day < 10 ? '0' : '') + day;
+                var output = d.getFullYear() + '/' +
+                    (month < 10 ? '0' : '') + month + '/' +
+                    (day < 10 ? '0' : '') + day;
 
-            return output;
-        }
+                return output;
+            }
 
-    </script>
+        </script>
 
 
 
 
-}
+    }
