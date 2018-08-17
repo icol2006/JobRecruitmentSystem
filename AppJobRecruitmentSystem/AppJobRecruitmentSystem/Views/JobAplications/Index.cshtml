@@ -1,75 +1,203 @@
-﻿@model IEnumerable<AppJobRecruitmentSystem.Entities.JobAplication>
+﻿@model  PagedList.IPagedList<AppJobRecruitmentSystem.Entities.JobAplication>
+@using PagedList.Mvc;
 
-@{
-    ViewBag.Title = "Index";
-}
+    @{
+        ViewBag.Title = "Index";
+    }
 
-<h2>Index</h2>
+    <h2>Listado de postulaciones a trabajos</h2>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-3 col-lg-3 areaSearch">
+                <div class="card">
+                    <div class="card-header" style="background-color: #597ce1;color:white">
+                        <h5 class="card-title">Filtro</h5>
+                    </div>
+                    <div class="card-body">
+
+                        @using (Html.BeginForm("Index", "JobAplications", FormMethod.Get))
+                        {
+                            <p>
+                                Buscar por empresa:
+                                @Html.TextBox("SearchCompany", ViewBag.CurrentCompanyFilter as string, htmlAttributes: new { @class = "form-control col-md-12" })
+                                Buscar por puesto:
+                                @Html.TextBox("SearchJob", ViewBag.CurrentJobFilter as string, htmlAttributes: new { @class = "form-control col-md-12" })
+                                Nombre candidato:
+                                @Html.TextBox("Searchcandidate", ViewBag.CurrentCandidateFilter as string, htmlAttributes: new { @class = "form-control col-md-12" })
+                                Fecha inicio de publicacion
+                                @Html.TextBox("SearchDateStart", ViewBag.CurrentDateStartFilter as string, htmlAttributes: new { @class = "form-control col-md-12 datepicker" })
+                                Fecha final de publicacion
+                                @Html.TextBox("SearchDateEnd", ViewBag.CurrentDateEndFilter as string, htmlAttributes: new { @class = "form-control col-md-12 datepicker" })
+
+                            </p>
+                            <input type="submit" value="Buscar" />
+                        }
+
+                    </div>
+                </div>
+            </div>
 
 
-<table class="table">
-    <tr>
-        <th>        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.candidate.firtsname)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.candidate.identification)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.candidate.resume)
-        </th>
-        <th>        </th>
-        <th>  Empresa      </th>
-        <th>
-            @Html.DisplayNameFor(model => model.job.description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.job.date_publication)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.dateofaplication)
-        </th>
-        <th></th>
-    </tr>
+            <div class="col-md-9 col-lg-9 datosCandidatosEmpresas">
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstOrDefault().id)
+                        </th>
+                        @if (User.IsInRole("administrator") || User.IsInRole("company"))
+                        {
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().candidate.firtsname)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().candidate.resume)
+                            </th>
+                        }
+                        @if (!User.IsInRole("company"))
+                        {
+                            <th>  Empresa      </th>
+                        }
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstOrDefault().job.name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstOrDefault().job.date_publication)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstOrDefault().dateofaplication)
+                        </th>
+                        @if (User.IsInRole("candidate") || User.IsInRole("administrator"))
+                        {
+                            <th></th>
+                        }                        
+                    </tr>
 
-@foreach (var item in Model)
-{
-    <tr>
-        <td>
-            @Html.HiddenFor(modelItem => item.id_candidate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.candidate.firtsname)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.candidate.identification)            
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.candidate.resume)
-        </td>
-        <td>
-            @Html.HiddenFor(modelItem => item.id_job)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.job.company.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.job.description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.job.date_publication)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.dateofaplication)
-        </td>
-        <td>
-            @if (User.IsInRole("administrator") || User.IsInRole("company"))
-            {
-                @Html.ActionLink("Eliminar", "Delete", new { id = item.id })
-            }
-        </td>
-    </tr>
-}
+                    @foreach (var item in Model)
+                    {
+                        <tr>
 
-</table>
+                            @Html.HiddenFor(modelItem => item.id_candidate)
+                            <td>
+                                @Html.DisplayFor(modelItem => item.id)
+                            </td>
+
+                            @if (User.IsInRole("administrator") || User.IsInRole("company"))
+                {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.candidate.firtsname)
+                                    @Html.DisplayFor(modelItem => item.candidate.lastname)
+                                </td>
+                                <td>
+                                    @Html.HiddenFor(modelItem => item.candidate.resume)
+                                    <button type="button" class="btn btn-primary btnShowResume" data-toggle="modal" data-target="#myModal">
+                                        Ver
+                                    </button>
+                                </td>
+                            }
+                            @Html.HiddenFor(modelItem => item.id_job)
+                            @if (!User.IsInRole("company"))
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.job.company.name)
+                                </td>
+                            }
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.job.name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.job.date_publication)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.dateofaplication)
+                            </td>
+                            @if (User.IsInRole("candidate") || User.IsInRole("administrator"))
+                            {
+                                <td>
+                                    @Html.ActionLink("Eliminar", "Delete", new { id = item.id })
+                                </td>
+                            }
+                        </tr>
+
+                    }
+
+                </table>
+
+
+                <div id='pagination' style="text-align: center">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                    of @Model.PageCount
+
+                    <nav aria-label="Page navigation example">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new
+               {
+                   page,
+                   currentCompanyFilter = ViewBag.CurrentCompanyFilter,
+                   currentJobFilter = ViewBag.CurrentJobFilter,
+                   currentCandidateFilter = ViewBag.CurrentCandidateFilter,
+                   currentDateStartFilter = ViewBag.CurrentDateStartFilter,
+                   currentDateEndFilter = ViewBag.CurrentDateEndFilter
+               }))
+
+
+                    </nav>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content col-md-12">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Datos del candidato</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <iframe id="res" src="" class="col-md-12 col-lg-12" height="500"></iframe>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+
+        <script>
+            var resumeId = "";
+            $(function () {
+                $(".btnShowResume").click(function () {
+                    var resumeId = $(this).closest("tr").find("#item_candidate_resume").val();
+
+                    var urlResume = "https://docs.google.com/file/d/" + resumeId + "/preview"
+                    $('#res').attr('src', urlResume);
+                });
+            });
+
+
+
+
+        </script>
+
+
+
+    }
+

@@ -12,6 +12,8 @@ using AppJobRecruitmentSystem.BAL;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using System.IO;
+using Google.Apis.Drive.v3;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -52,7 +54,7 @@ namespace AppJobRecruitmentSystem.Controllers
             list = new List<Candidate>();
             list = can.GetListCandidates();
 
-           Candidate x= can.GetCandidate(list[0]);
+           Candidate x= can.GetCandidate(list[0].id);
 
             return View(list);
 
@@ -95,7 +97,7 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             Candidate candidate = new Candidate();
             candidate.id =(String) id;
-            candidate = db.GetCandidate(candidate);
+            candidate = db.GetCandidate(candidate.id);
             if (candidate == null)
             {
                 return HttpNotFound();
@@ -109,12 +111,18 @@ namespace AppJobRecruitmentSystem.Controllers
             return View();
         }
 
+        public FileStreamResult GetPDF()
+        {
+            FileStream fs = new FileStream("c:\\cover.pdf", FileMode.Open, FileAccess.Read);
+            return File(fs, "application/pdf");
+        }
+
         // POST: Candidates/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,firtsname,lastname,identification,resume,email,password,rol")] Candidate candidate)
+        public ActionResult Create([Bind(Include = "id,firtsname,lastname,identification,resume")] Candidate candidate)
         {
             if (ModelState.IsValid)
             {
@@ -134,7 +142,7 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             Candidate candidate = new Candidate();
             candidate.id = id;
-            candidate = db.GetCandidate(candidate);
+            candidate = db.GetCandidate(candidate.id);
             if (candidate == null)
             {
                 return HttpNotFound();
@@ -147,7 +155,7 @@ namespace AppJobRecruitmentSystem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,firtsname,lastname,identification,resume,email,password,rol")] Candidate candidate)
+        public ActionResult Edit([Bind(Include = "id,firtsname,lastname,identification,resume,email")] Candidate candidate)
         {
             if (ModelState.IsValid)
             {
@@ -157,31 +165,68 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(candidate);
         }
 
-        // GET: Candidates/Delete/5
-       /* public ActionResult Delete(int? id)
+        [HttpPost]
+        public async Task<String> Upload()
         {
-            if (id == null)
+            String resultado = "",  idCandidate="";
+            DriveGoogle drivegoogle = new DriveGoogle();
+
+            idCandidate = Request.Form.GetValues("id")[0];
+
+            DriveService driveService = await drivegoogle.GetService();
+            drivegoogle.DownloadDirectoryName = Server.MapPath("~/App_Data/");
+
+            for (int i = 0; i < Request.Files.Count; i++)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var file = Request.Files[i];
+
+                if (file.ContentType.Equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+
+                    var path = Path.Combine(Server.MapPath("~/App_Data/"), fileName);
+                    file.SaveAs(path);
+
+                    drivegoogle.fileName = fileName;
+
+                    await drivegoogle.UploadFile(driveService);
+
+                    resultado= drivegoogle.uploadedFile.Id;
+                    var candidate=  db.GetCandidate(idCandidate);
+                    candidate.resume = resultado;
+                    db.UpdateCandidate(candidate);
+
+                }
             }
-            Candidate candidate = db.Candidates.Find(id);
-            if (candidate == null)
-            {
-                return HttpNotFound();
-            }
-            return View(candidate);
-        }*/
+
+            return resultado;
+        }
+
+        // GET: Candidates/Delete/5
+        /* public ActionResult Delete(int? id)
+         {
+             if (id == null)
+             {
+                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+             }
+             Candidate candidate = db.Candidates.Find(id);
+             if (candidate == null)
+             {
+                 return HttpNotFound();
+             }
+             return View(candidate);
+         }*/
 
         // POST: Candidates/Delete/5
-       /* [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Candidate candidate = db.Candidates.Find(id);
-            db.Candidates.Remove(candidate);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }*/
+        /* [HttpPost, ActionName("Delete")]
+         [ValidateAntiForgeryToken]
+         public ActionResult DeleteConfirmed(int id)
+         {
+             Candidate candidate = db.Candidates.Find(id);
+             db.Candidates.Remove(candidate);
+             db.SaveChanges();
+             return RedirectToAction("Index");
+         }*/
 
         /*protected override void Dispose(bool disposing)
         {

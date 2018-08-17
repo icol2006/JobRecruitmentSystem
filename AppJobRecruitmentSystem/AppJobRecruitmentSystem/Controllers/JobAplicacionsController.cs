@@ -11,6 +11,8 @@ using AppJobRecruitmentSystem.Models;
 using AppJobRecruitmentSystem.BAL;
 using System.Net.Mime;
 using Microsoft.AspNet.Identity.Owin;
+using System.Reflection;
+using PagedList;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -19,17 +21,73 @@ namespace AppJobRecruitmentSystem.Controllers
         private JobAplicationBAL db = new JobAplicationBAL();
 
         // GET: JobAplicacions
-        public ActionResult Index()
+        public ActionResult Index( 
+             string currentCompanyFilter, string currentJobFilter, string currentCandidateFilter,
+             string currentDateStartFilter, string currentDateEndFilter,
+             string searchcompany, string searchjob, string searchcandidate, 
+             string searchdateStart, string searchdateEnd, int? page)
         {
             List<JobAplication> list = db.GetListJobAplicacions();
             String idUser = "";
+            int pageSize = 6;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+
+            if (searchcompany != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchcompany = currentCompanyFilter;
+                searchjob = currentJobFilter;
+                searchcandidate = currentCandidateFilter;
+                searchdateStart = currentDateStartFilter;
+                searchdateEnd = currentDateEndFilter;
+            }
+
+            ViewBag.CurrentCompanyFilter = searchcompany;
+            ViewBag.CurrentJobFilter = searchjob;
+            ViewBag.CurrentCandidateFilter = searchcandidate;
+            ViewBag.CurrentDateStartFilter = searchdateStart;
+            ViewBag.CurrentDateEndFilter = searchdateEnd;
+
 
             for (int i = 0; i < list.Count; i++)
             {
-                list[i].candidate = new CandidateBAL().GetCandidate(new Candidate(list[i].id_candidate,Rol.candidate,"","",0,""));
+                list[i].candidate = new CandidateBAL().GetCandidate(list[i].id_candidate);
                 list[i].job = new JobBAL().GetJob(list[i].id_job);
                 list[i].job.company = new CompanyBAL().GetCompany(list[i].job.id_company);
             }
+
+            //Filtros
+            if (!String.IsNullOrEmpty(searchcompany))
+            {
+                list = list.Where(x => x.job.company.name.ToUpper()
+                .Contains(searchcompany.ToUpper())).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(searchjob))
+            {
+                list = list.Where(x => x.job.name.ToUpper()
+                .Contains(searchjob.ToUpper())).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(searchcandidate))
+            {
+                list = list.Where(
+                    x => (x.candidate.firtsname+" "+ x.candidate.lastname).ToUpper()
+                    .Contains(searchcandidate.ToUpper())).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(searchdateStart) && !String.IsNullOrEmpty(searchdateEnd))
+            {
+                list = (from p in list
+                        where p.job.date_publication >= Convert.ToDateTime(searchdateStart)
+                            && p.job.date_publication <= Convert.ToDateTime(searchdateEnd)
+                            select p).ToList();
+            }
+
 
             if (User.Identity.IsAuthenticated)
             {
@@ -37,6 +95,7 @@ namespace AppJobRecruitmentSystem.Controllers
                     .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
             }
 
+            
             if (User.IsInRole("company"))
             {
                 list = list.FindAll(x => x.job.id_company == idUser).ToList();
@@ -46,8 +105,13 @@ namespace AppJobRecruitmentSystem.Controllers
                 list = list.FindAll(x => x.id_candidate == idUser).ToList();
             }
 
+            IPagedList<JobAplication> jobAplications = null;
 
-            return View(list);
+            jobAplications = list.OrderByDescending
+                (m => m.dateofaplication).ToPagedList(pageIndex, pageSize);
+
+
+            return View(jobAplications);
         }
 
         // GET: JobAplicacions/Details/5

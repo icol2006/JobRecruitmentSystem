@@ -20,7 +20,6 @@ namespace AppJobRecruitmentSystem.Entities
         [Display(Name = "Identificacion")]
         public int identification { get; set; }
 
-        [Required]
         [Display(Name = "Curriculum")]
         public String resume { get; set; }
 

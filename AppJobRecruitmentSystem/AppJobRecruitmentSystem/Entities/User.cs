@@ -16,7 +16,7 @@ namespace AppJobRecruitmentSystem.Entities
         [Display(Name = "Email")]
         public String email { get; set; }
 
-        [Required]
+
         public String password { get; set; }
 
         [Required]

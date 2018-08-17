@@ -1037,7 +1037,10 @@ $.extend($.validator, {
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/date
 		date: function( value, element ) {
-			return this.optional(element) || !/Invalid|NaN/.test(new Date(value).toString());
+		    $.culture = Globalize.culture("es-MX");
+		    var date = Globalize.parseDate(value, "dd/MM/yyyy", "es-MX");
+		    return this.optional(element) ||
+                           !/Invalid|NaN/.test(new Date(date).toString());
 		},
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/dateISO
@@ -1227,7 +1230,8 @@ $.format = $.validator.format;
 			return ajax.apply(this, arguments);
 		};
 	}
-}(jQuery));
+}
+(jQuery));
 
 // provides delegate(type: String, delegate: Selector, handler: Callback) plugin for easier event delegation
 // handler is only called when $(event.target).is(delegate), in the scope of the jquery-object for event.target

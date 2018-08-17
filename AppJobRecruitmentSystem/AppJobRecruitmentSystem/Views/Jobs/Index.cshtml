@@ -4,44 +4,54 @@
 
 <script src="∼/Scripts/jquery.unobtrusive-ajax.js"></script>
 @{
-    ViewBag.Title = "Listado de Trabajos";
+    ViewBag.Title = "Listado Ofertas de Trabajos";
 }
 
-<h2>Listado de Trabajos</h2>
-@{ 
-}
-<p>
+<h2>Listado Ofertas de Trabajos</h2>
 
-
-</p>
 
 <div class="container">
     <div class="row">
-        <div class="col-md-3 col-lg-3">
+
+        <div class="col-md-3 col-lg-3 areaSearch">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Filtro</h5>                   
+                <div class="card-header filter" style="background-color: #597ce1;color:white">
+                    <h5 class="card-title">Filtro</h5>  
+                </div>
+                <div class="card-body filteroptions">
+                 
                         @using (Html.BeginForm("Index", "Jobs", FormMethod.Get))
                         {
                             <p>
-                                Buscar por puesto: 
+                                Buscar por puesto:                                 
+                                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, htmlAttributes: new { @class = "form-control col-md-12" })                                
+                                Fecha inicio de publicacion oferta de trabajo
+                                @Html.TextBox("SearchDateStart", ViewBag.CurrentStartFilter as string, htmlAttributes: new { @class = "form-control col-md-12 datepicker" })
+                                Fecha final de publicacion oferta de trabajo
+                                @Html.TextBox("SearchDateEnd", ViewBag.CurrentEndFilter as string, htmlAttributes: new { @class = "form-control col-md-12 datepicker" })
+                                Categoria
+                                @Html.DropDownList("id_category",null, htmlAttributes: new { @class = "form-control col-md-12" })
+
                                 <br />
-                                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
                                 <br />
-                                <br />
-                                <input type="submit" value="Search" />
+                                <input type="submit" value="Buscar" />
                             </p>
                         }
                 </div>
             </div>
+            <br /><br />
         </div>
+        
         <div class="col-md-9 col-lg-9">
 
             <div class="areaAdministradores ">
                 @if (User.IsInRole("company"))
                 {
-                    @Html.ActionLink("Crear nuevo", "Create")
-                    <br />
+                    <h5>
+                        @Html.ActionLink("Crear nueva oferta de trabajo", "Create",null, new { @class = "buttonlink" })
+                    </h5>
+
+                
                 }
                 @if (User.IsInRole("administrator") || User.IsInRole("company"))
                 {
@@ -112,12 +122,9 @@
                                     @Html.ActionLink("Editar", "Edit", new { id = item.id }) |
                                     @Html.ActionLink("Eliminar", "Delete", new { id = item.id })
                                 </td>
-
-                                <td>
-                                    @Html.Hidden("Iduser", (string)ViewBag.iduser)
-                                    @Html.HiddenFor(modelItem => item.id)
-                                    @Html.HiddenFor(modelItem => item.id_category)
-                                </td>
+                                @Html.Hidden("Iduser", (string)ViewBag.iduser)
+                                @Html.HiddenFor(modelItem => item.id)
+                                @Html.HiddenFor(modelItem => item.id_category)
 
                             </tr>
                             ;
@@ -127,46 +134,56 @@
                 }
             </div>
 
-            <div class="areaCandidatos">
+            <div class="areaCandidatos ">
                 @if (User.IsInRole("candidate") || !User.Identity.IsAuthenticated)
                 {
                     foreach (var item in Model)
                     {
                         if (item.enable_job.Equals(true) || (User.IsInRole("administrator") || User.IsInRole("company")))
                         {
-                            <div class="card card-body">
-                                <h5 class="card-title">@Html.DisplayFor(modelItem => item.name)</h5>
-                                <hr />
-                                <h5>@Html.DisplayFor(modelItem => item.company.name)</h5>
-                                <p class="card-text">@Html.DisplayFor(modelItem => item.description, new { id = "description" })</p>
-                                @if (User.IsInRole("candidate"))
-                                {
-                                    <a href="#" class="card-link enviar"> Enviar Curriculum </a>
-                                }
-                                <h7 style="text-align:right;">Fecha Publicacion</h7>
-                                <h7 style="text-align:right;">@Html.DisplayFor(modelItem => item.date_publication)</h7>
+                            <div class="card">
+                                <div class="card-header" style="background-color: #597ce1;color:white">
+                                    <p class="card-text">@Html.DisplayFor(modelItem => item.name) - @Html.DisplayFor(modelItem => item.company.name)</p>
+                                </div>
+                                <div class="card card-body">                                    
 
+                                    <p class="card-text">@Html.DisplayFor(modelItem => item.description, new { id = "description" })</p>
+                                    @if (User.IsInRole("candidate"))
+                                    {
+                                        <a href="#" class="card-link enviar"> Enviar Curriculum </a>
+                                    }
+                                    <h7 style="text-align:right;">Fecha Publicacion</h7>
+                                    <h7 style="text-align:right;">@Html.DisplayFor(modelItem => item.date_publication)</h7>
+                                    <h7 style="text-align:left;"></h7>
 
-                                @Html.Hidden("Iduser", (string)ViewBag.iduser)
-                                @Html.HiddenFor(modelItem => item.id)
-                                @Html.HiddenFor(modelItem => item.id_category)
+                                    @Html.Hidden("Iduser", (string)ViewBag.iduser)
+                                    @Html.HiddenFor(modelItem => item.id)
+                                    @Html.HiddenFor(modelItem => item.id_category)
+                                </div>
                             </div>
+                           
                             <br />
                                  }
                     }
                 }
             </div>
 
-            <div id='pagination' style="text-align: center">
+            <div id='pagination'  style="text-align: center">
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
                 of @Model.PageCount
 
                 <nav aria-label="Page navigation example">
-                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page,
+                       currentFilter = ViewBag.CurrentFilter,
+                       currentDateStart = ViewBag.CurrentStartFilter,
+                       currentDateEnd = ViewBag.CurrentEndFilter,
+                       id_category=ViewBag.id_category.SelectedValue
+               }))
                 </nav>
             </div>
 
         </div>
+
     </div>
 </div>
 
@@ -174,34 +191,18 @@
     @section Scripts {
         <script>
 
+            $(document).ready(function () {
+                if (window.innerWidth < 500) {
+                    $(".filter").click(function () {
+                        $(".filteroptions").toggle();
+                    });
+                }
+            });
+
+
             $(function () {
 
-                $("#btnjobname").click(function () {
-                    alert("asdl");
-                });
-
-                    $("#btnjobname").click(function () {
-                        $.ajax({
-                            type: "GET",
-                            url: '@Url.Action("Index","Jobs")',
-                            data: { jobname: "Mesero" },
-                            dataType: "json",
-                            contentType: "application/json; charset=utf-8",
-                            success: function (Message) {
-                                alert(Message.responseText);
-
-                            },
-                            error: function (Message) {
-                                alert(Message.responseText);
-                            }
-                        });
-                        return false;
-                    });
-
-
-
                 $(".enviar").click(function () {
-
                     var jobAplicacion = {};
                     jobAplicacion.id_candidate = $(this).closest(".card-body").find("#Iduser").val();
                     jobAplicacion.id_job = $(this).closest(".card-body").find("#item_id").val();
@@ -214,10 +215,12 @@
                         dataType: "json",
                         contentType: "application/json; charset=utf-8",
                         success: function (Message) {
+                            alert("success");
                             alert(Message.responseText);
 
                         },
                         error: function (Message) {
+                            alert("error");
                             alert(Message.responseText);
                         }
                     });
@@ -238,9 +241,32 @@
                 return output;
             }
 
+
+            $(document).ready(function() {
+                $("#imageUploadForm").change(function() {
+                    var formData = new FormData();
+                    var totalFiles = document.getElementById("imageUploadForm").files.length;
+                    for (var i = 0; i < totalFiles; i++) {
+                        var file = document.getElementById("imageUploadForm").files[i];
+                        formData.append("imageUploadForm", file);
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Upload", "Jobs")',
+                        data: formData,
+                        dataType: 'json',
+                        contentType: false,
+                        processData: false,
+                        success: function (Message) {
+                            alert(Message.responseText);
+
+                        },
+                        error: function (Message) {
+                            alert(Message.responseText);
+                        }
+                    });
+                });
+            });
+
         </script>
-
-
-
-
     }

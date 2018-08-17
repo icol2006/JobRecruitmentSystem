@@ -21,16 +21,7 @@
             @Html.DisplayNameFor(model => model.identification)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.resume)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.rol)
         </th>
         <th></th>
     </tr>
@@ -47,16 +38,7 @@
             @Html.DisplayFor(modelItem => item.identification)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.resume)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.rol)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
@@ -67,3 +49,22 @@
 }
 
 </table>
+
+@section Scripts {
+    <script>
+        function load()
+        {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetPDF", "Jobs")',
+                success: function (Message) {
+
+                },
+                error: function (Message) {
+                    alert(Message.responseText);
+                }
+            });
+        }
+
+    </script>
+}

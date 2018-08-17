@@ -6,19 +6,57 @@
     @Html.AntiForgeryToken()
 
         <div style="float:right">
-            <ul class="nav navbar-nav navbar-nav">
-                <a class="nav-item nav-link" href="#">@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</a>
-                <a class="nav-item nav-link" href="#"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>)</a>
-            </ul>
+            <ul class="navbar-nav mr-auto">
+
+                <!-- Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        @User.Identity.GetUserName()
+                    </a>
+
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">
+                            @Html.ActionLink("Cambiar clave", "ChangePassword", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "dropdown-item" })
+                        </a>
+                        <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">
+                           Cerrar Sesion
+                        </a>
+                    </div>
+
+                </li>
+
+             </ul>
         </div>
     }
 }
 else
 {
+    <div style="float:right">
+        <ul class="navbar-nav mr-auto">
+            <!-- Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+               Registro
+                </a>
 
-        <ul class="nav navbar-nav  float-lg-right">
-            <a class="nav-item nav-link" href="#">@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</a>
-            <a class="nav-item nav-link" href="#">@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">
+                         @Html.ActionLink("Registro de candidato", "RegisterCandidate", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "dropdown-item" })
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        @Html.ActionLink("Registro de empresa", "RegisterCompany", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "dropdown-item" })
+                    </a>
+                </div>
+
+            </li>
+
+                    @Html.ActionLink("Iniciar sesion", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink",@class= "nav-item nav-link" })
+            
+     
+
+
+
         </ul>
+        </div>
 
-}
+        }

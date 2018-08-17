@@ -22,5 +22,13 @@ namespace AppJobRecruitmentSystem.Entities
             get; set;
         }
 
+        public Category() { }
+
+        public Category(int id, string name)
+        {
+            this.id = id;
+            this.name = name;
+        }
+
     }
 }

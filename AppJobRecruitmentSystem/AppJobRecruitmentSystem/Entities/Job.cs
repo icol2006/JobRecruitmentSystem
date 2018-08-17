@@ -20,13 +20,14 @@ namespace AppJobRecruitmentSystem.Entities
         [Display(Name = "Descripcion")]
         public String description  { get; set; }
 
+       
         [Required]
-        [Display(Name = "Fecha publicacion")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [Display(Name = "Publicacion de oferta")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime date_publication { get; set; }
 
         [Required]
-        [Display(Name = "Habilitar")]
+        [Display(Name = "Habilitar Oferta")]
         public Boolean enable_job { get; set; }
 
         [Required]

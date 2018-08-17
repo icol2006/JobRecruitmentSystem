@@ -11,6 +11,8 @@ using AppJobRecruitmentSystem.Models;
 using AppJobRecruitmentSystem.BAL;
 using Microsoft.AspNet.Identity.Owin;
 using PagedList;
+using System.IO;
+using System.Threading;
 
 namespace AppJobRecruitmentSystem.Controllers
 { 
@@ -18,8 +20,18 @@ namespace AppJobRecruitmentSystem.Controllers
     {
         private JobBAL db = new JobBAL();
 
+        protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
+        {
+            string[] cultures = { "es-CL", "es-MX" };
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(cultures[1]);
+            Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
+
+            return base.BeginExecuteCore(callback, state);
+        }
+
         public ActionResult Index(string sortOrder, string CurrentSort, int? page,
-             string currentFilter, string searchString)
+             string currentFilter, string currentDateStart, string currentDateEnd,
+             string searchString, string searchDateStart, string searchDateEnd, string id_category)
         {
             int pageSize = 6;
             int pageIndex = 1;
@@ -31,16 +43,26 @@ namespace AppJobRecruitmentSystem.Controllers
 
             sortOrder = String.IsNullOrEmpty(sortOrder) ? "date_publication" : sortOrder;
 
-            if (searchString != null)
+            if (searchString != null )
             {
                 page = 1;
             }
             else
             {
                 searchString = currentFilter;
+                searchDateStart = currentDateStart;
+                searchDateEnd = currentDateEnd;
             }
 
+            List<Category> listCategories = new List<Category>();
+            listCategories.Add(new Category(0, "Todas"));
+            listCategories.AddRange(new CategoryBAL().GetListCategories());       
+
             ViewBag.CurrentFilter = searchString;
+            ViewBag.CurrentStartFilter = searchDateStart;
+            ViewBag.CurrentEndFilter = searchDateEnd;
+            ViewBag.id_category = new SelectList(listCategories, 
+                "id", "name", id_category==null?null:id_category);
 
 
             listJobs = db.GetListJobs();
@@ -50,9 +72,23 @@ namespace AppJobRecruitmentSystem.Controllers
                 listJobs = db.GetListJobs().Where(x => x.name.ToUpper()
                 .Contains(searchString.ToUpper())).ToList();
             }
+            
+            if (!String.IsNullOrEmpty(searchDateStart) && !String.IsNullOrEmpty(searchDateEnd))
+            {
+                 listJobs = (from p in listJobs
+                               where p.date_publication >= Convert.ToDateTime(searchDateStart)
+                               && p.date_publication <= Convert.ToDateTime(searchDateEnd)
+                               select p).ToList();                
+            }
+
+            if (!String.IsNullOrEmpty(id_category) )
+            {
+                if(id_category!="0")
+                listJobs = listJobs.Where(x => x.id_category == (Convert.ToInt32(id_category))).ToList();
+            }
 
 
-            if (User.Identity.IsAuthenticated)
+                if (User.Identity.IsAuthenticated)
             {
                 idUser = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
                  .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
@@ -73,7 +109,7 @@ namespace AppJobRecruitmentSystem.Controllers
 
             IPagedList<Job> jobs = null;
 
-            jobs = listJobs.OrderBy
+            jobs = listJobs.OrderByDescending
                 (m => m.date_publication).ToPagedList(pageIndex, pageSize);
 
             ViewBag.iduser = idUser;

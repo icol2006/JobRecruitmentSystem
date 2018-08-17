@@ -16,9 +16,9 @@ namespace AppJobRecruitmentSystem.BAL
             return candidateDAL.GetListCandidates();
         }
 
-        public Candidate GetCandidate(Candidate pCandidate)
+        public Candidate GetCandidate(String id)
         {
-            return candidateDAL.GetCandidate(pCandidate);
+            return candidateDAL.GetCandidate(id);
         }
 
         public async void InsertCandidate(Candidate pCandidate)

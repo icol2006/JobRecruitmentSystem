@@ -1,90 +1,186 @@
 ﻿@model AppJobRecruitmentSystem.Entities.Candidate
 
+<style>
+    body {
+        background-color: #f2f2f2;
+        background-position: center center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        background: #ffffff;
+        margin-top: 40px;
+        border: 2px solid #5f9cd8;
+        height: auto;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .col.s6 > .btn {
+        width: 100%;
+    }
+
+    .gender-male, .gender-female {
+        display: inline-block;
+    }
+
+    .gender-female {
+        margin-left: 35px;
+    }
+
+    radio:required {
+        border-color: red;
+    }
+
+    .container {
+        animation: showUp 0.5s cubic-bezier(0.18, 1.3, 1, 1) forwards;
+    }
+
+
+    .row {
+        margin-bottom: 10px;
+    }
+
+    .ngl {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+    }
+
+    .btn {
+        text-decoration: none;
+        color: #fff;
+        background-color: #5f9cd8;
+        text-align: center;
+        letter-spacing: .5px;
+        -webkit-transition: .2s ease-out;
+        -moz-transition: .2s ease-out;
+        -o-transition: .2s ease-out;
+        transition: .2s ease-out;
+        cursor: pointer;
+    }
+</style>
+
+
 @{
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
 
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Candidate</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.id)
+    <div class="row">
+        <div class="col-md-4 col-lg-4">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.firtsname, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.firtsname, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.firtsname, "", new { @class = "text-danger" })
-            </div>
+                <div class="form-horizontal">
+                    <h4>Actualizar Candidato</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.id)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.firtsname, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.firtsname, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.firtsname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.lastname, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.lastname, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.lastname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.identification, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.identification, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.identification, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            @Html.HiddenFor(model => model.email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            Subir curriculum
+                            <input type="file" id="imageUploadForm" name="image" multiple="multiple" />
+                             @Html.HiddenFor(model => model.resume, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Salvar" class="btn btn-default" />
+                        </div>
+                    </div>
+
+                </div>
+            }
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.lastname, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.lastname, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.lastname, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.identification, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.identification, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.identification, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.resume, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.resume, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.resume, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.email, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.password, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.rol, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.rol, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.rol, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
+        <div class="col-md-8 col-lg-8">     
+          <iframe id="res" src="" class="col-md-12 col-lg-12" height="500"></iframe>            
+       </div>
     </div>
-}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+
+        @{ if (User.IsInRole("administrator"))
+            {
+                <div>
+                    @Html.ActionLink("Volver al Listado", "Index")
+                </div>
+            }
+        }
+
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+
+
+<script>
+    var urlResume = "https://docs.google.com/file/d/" + $('#resume').val() + "/preview"
+    $('#res').attr('src', urlResume);
+    $(document).ready(function () {
+
+     
+
+        $("#imageUploadForm").change(function () {
+            var formData = new FormData();
+            var totalFiles = document.getElementById("imageUploadForm").files.length;
+            for (var i = 0; i < totalFiles; i++) {
+                var file = document.getElementById("imageUploadForm").files[i];
+                var idCandidate = $('#id').val();
+                formData.append("imageUploadForm", file);
+                formData.append("id", idCandidate);
+            }
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Upload", "Candidates")',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    var urlResume="https://docs.google.com/file/d/"+result+"/preview";
+                    $('#res').attr('src', urlResume);
+                    $('#resume').val(result);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('No se subio el archivo');
+                }
+            });
+        });
+    });
+</script>
+        }

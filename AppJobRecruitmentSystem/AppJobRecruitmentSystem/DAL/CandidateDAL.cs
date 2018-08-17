@@ -52,13 +52,13 @@ namespace AppJobRecruitmentSystem.DAL
             return listCandidates;
         }
 
-        public Candidate GetCandidate(Candidate pCandidate)
+        public Candidate GetCandidate(String id)
         {
             Candidate candidate = new Candidate();
             var parameters = new List<SqlParameter>();
             SqlConnection connection = new SqlConnection();
 
-            parameters.Add(dbManager.CreateParameter("@id", 128, pCandidate.id, DbType.String));
+            parameters.Add(dbManager.CreateParameter("@id", 128, id, DbType.String));
 
             SqlDataReader dataReader = dbManager.GetDataReader("sp_GetCandidate", CommandType.StoredProcedure, parameters.ToArray(), out connection);
 

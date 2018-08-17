@@ -88,35 +88,35 @@ namespace AppJobRecruitmentSystem.Models
     public class RegisterCandidateViewModel
     {
 
-        [Required]
+        [Required(ErrorMessage = "Correo electronico es requerido")]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Correo electronico")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Password es requerido")]
+        [StringLength(100, ErrorMessage = "Password debe posser minimo 3 letras", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirmacion del password")] 
+        [Compare("Password", ErrorMessage = "El password y la confirmacion de password no coinciden")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
-        [StringLength(150, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        [Required(ErrorMessage = "Nombre es requerido")]
+        [StringLength(150, ErrorMessage = "Nombre debe posser minimo 3 letras", MinimumLength = 3)]
         [DataType(DataType.Text)]
-        [Display(Name = "First Name")]
+        [Display(Name = "Nombre")]
         public string FirstName { get; set; }
 
-        [Required]
-        [StringLength(150, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 1)]
+        [Required(ErrorMessage = "Apellido es requerido")]
+        [StringLength(150, ErrorMessage = "Apellido debe posser minimo 1 letra", MinimumLength = 1)]
         [DataType(DataType.Text)]
-        [Display(Name = "Last Name")]
+        [Display(Name = "Apellido")]
         public string LastName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Identification es requerido")]
         [Display(Name = "Identification")]
         public int identification { get; set; }
 
@@ -128,33 +128,32 @@ namespace AppJobRecruitmentSystem.Models
 
     public class RegisterCompanyViewModel
     {
-
-        [Required]
+        [Required(ErrorMessage = "Correo electronico es requerido")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Password es requerido")]
+        [StringLength(100, ErrorMessage = "Password debe posser minimo 6 letras", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirmar password")]
+        [Compare("Password", ErrorMessage = "El password y la confirmacion de password no coinciden")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
-        [StringLength(150, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        [Required(ErrorMessage = "Nombre es requerido")]
+        [StringLength(150, ErrorMessage = "Nombre debe posser minimo 3 letras", MinimumLength = 3)]
         [DataType(DataType.Text)]
-        [Display(Name = "Name")]
+        [Display(Name = "Nombre")]
         public string Name { get; set; }
 
-        [Required]
-        [StringLength(150, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 1)]
+        [Required(ErrorMessage = "Descripcion es requerida")]
+        [StringLength(150, ErrorMessage = "Descripcion debe posser minimo 5 letras", MinimumLength = 5)]
         [DataType(DataType.Text)]
-        [Display(Name = "Description")]
+        [Display(Name = "Descripcion")]
         public string Description { get; set; }
 
     }
