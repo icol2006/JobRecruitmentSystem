@@ -212,7 +212,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CandidatesController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JobAplicacionsController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -246,6 +245,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\personaldata.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -313,9 +313,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -336,29 +333,16 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Candidates\Create.cshtml" />
-    <Content Include="Views\Candidates\Delete.cshtml" />
-    <Content Include="Views\Candidates\Details.cshtml" />
     <Content Include="Views\Candidates\Edit.cshtml" />
-    <Content Include="Views\Candidates\Index.cshtml" />
-    <Content Include="Views\Companies\Create.cshtml" />
     <Content Include="Views\Companies\Delete.cshtml" />
-    <Content Include="Views\Companies\Details.cshtml" />
-    <Content Include="Views\Companies\Edit.cshtml" />
     <Content Include="Views\Companies\Index.cshtml" />
     <Content Include="Views\Jobs\Create.cshtml" />
     <Content Include="Views\Jobs\Delete.cshtml" />
-    <Content Include="Views\Jobs\Details.cshtml" />
     <Content Include="Views\Jobs\Edit.cshtml" />
     <Content Include="Views\Jobs\Index.cshtml" />
-    <Content Include="Views\JobAplications\Create.cshtml" />
-    <Content Include="Views\JobAplications\Delete.cshtml" />
-    <Content Include="Views\JobAplications\Details.cshtml" />
-    <Content Include="Views\JobAplications\Edit.cshtml" />
     <Content Include="Views\JobAplications\Index.cshtml" />
     <Content Include="Views\Account\RegisterCandidate.cshtml" />
     <Content Include="Views\Account\RegisterCompany.cshtml" />
-    <Content Include="Views\Jobs\GetJobsByCompany.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper-utils.min.js.map" />
@@ -368,6 +352,8 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Manage\ChangeEmail.cshtml" />
+    <Content Include="Views\Companies\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

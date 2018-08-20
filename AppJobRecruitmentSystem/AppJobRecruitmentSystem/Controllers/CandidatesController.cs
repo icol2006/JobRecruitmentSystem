@@ -14,18 +14,22 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System.IO;
 using Google.Apis.Drive.v3;
+using Microsoft.AspNet.Identity;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
+    [Authorize]
     public class CandidatesController : Controller
     {
         private CandidateBAL db = new CandidateBAL();
         // GET: Candidates
+        /*
         public ActionResult Index()
-        {
+        {            
             return View(db.GetListCandidates());
         }
-
+        */
+        /*
         public async Task<ActionResult> loadCandidates()
         {
             List<Candidate> listCandidate = new List<Candidate>();
@@ -36,6 +40,7 @@ namespace AppJobRecruitmentSystem.Controllers
             foreach (Candidate pCandidate in list)
             {
                 var UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
                 var user = new ApplicationUser { UserName = pCandidate.email, Email = pCandidate.email };
                 IdentityUserRole rol = new IdentityUserRole();
 
@@ -59,7 +64,8 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(list);
 
         }
-
+        */
+        /*
         public List<Candidate> getCandidates()
         {
             List<Candidate> listCandidate = new List<Candidate>();
@@ -87,7 +93,8 @@ namespace AppJobRecruitmentSystem.Controllers
 
             return listCandidate;
         }
-
+        */
+        /*
         // GET: Candidates/Details/5
         public ActionResult Details(String id)
         {
@@ -104,19 +111,22 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return View(candidate);
         }
-
+        */
+        /*
         // GET: Candidates/Create
         public ActionResult Create()
         {
             return View();
         }
-
+        */
+        /*
         public FileStreamResult GetPDF()
         {
             FileStream fs = new FileStream("c:\\cover.pdf", FileMode.Open, FileAccess.Read);
             return File(fs, "application/pdf");
         }
-
+        */
+        /*
         // POST: Candidates/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -132,7 +142,7 @@ namespace AppJobRecruitmentSystem.Controllers
 
             return View(candidate);
         }
-
+        */
         // GET: Candidates/Edit/5
         public ActionResult Edit(string id)
         {
@@ -155,13 +165,16 @@ namespace AppJobRecruitmentSystem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,firtsname,lastname,identification,resume,email")] Candidate candidate)
+        public async Task<ActionResult> Edit([Bind(Include = "id,firtsname,lastname,identification,resume")] Candidate candidate)
         {
+            ModelState.Remove("email");
+
             if (ModelState.IsValid)
             {
                 db.UpdateCandidate(candidate);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Jobs");
             }
+
             return View(candidate);
         }
 

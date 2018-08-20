@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using PagedList;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AppJobRecruitmentSystem.Controllers
 { 
@@ -20,16 +21,8 @@ namespace AppJobRecruitmentSystem.Controllers
     {
         private JobBAL db = new JobBAL();
 
-        protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
-        {
-            string[] cultures = { "es-CL", "es-MX" };
-            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(cultures[1]);
-            Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
 
-            return base.BeginExecuteCore(callback, state);
-        }
-
-        public ActionResult Index(string sortOrder, string CurrentSort, int? page,
+        public async Task<ActionResult> Index(string sortOrder, string CurrentSort, int? page,
              string currentFilter, string currentDateStart, string currentDateEnd,
              string searchString, string searchDateStart, string searchDateEnd, string id_category)
         {
@@ -86,14 +79,23 @@ namespace AppJobRecruitmentSystem.Controllers
                 if(id_category!="0")
                 listJobs = listJobs.Where(x => x.id_category == (Convert.ToInt32(id_category))).ToList();
             }
-
-
-                if (User.Identity.IsAuthenticated)
+                        
+            if (User.Identity.IsAuthenticated)
             {
+                var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
                 idUser = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
-                 .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
+                    .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
+
+                var user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindByEmailAsync(System.Web.HttpContext.Current.User.Identity.Name);
+                var userid =  userManager.FindByEmailAsync(System.Web.HttpContext.Current.User.Identity.Name).Id;
+                var ds = 5;
+                //var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                // var user = await userManager.FindByEmailAsync(User.Identity.Name);
+                //idUser = idUser;
+
+
             }
-          
+
 
             if (User.IsInRole("company"))
             {
@@ -117,67 +119,6 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(jobs);
         }
 
-        // GET: Jobs
-        public ActionResult Index2()
-        {
-            List<Job> listJobs = new List<Job>();
-            String idUser = null;
-
-            if(User.Identity.IsAuthenticated)
-            {
-                idUser = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
-                 .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
-            }
-
-
-            if (User.IsInRole("company"))
-            {
-
-                listJobs = db.GetListJobs().FindAll(x => x.id_company == idUser);
-            }
-            else
-            {
-                listJobs = db.GetListJobs();
-            }
-
-
-            for (int i = 0; i < listJobs.Count; i++)
-            {
-                listJobs[i].company = new CompanyBAL().GetCompany(listJobs[i].id_company);
-                listJobs[i].category = new CategoryBAL().GetCategory(listJobs[i].id_category);
-            }
-
-
-            ViewBag.iduser = idUser;
-
-            return View(listJobs);
-        }
-
-        // GET: Jobs
-        public ActionResult GetJobsByCompany()
-        {
-
-            List<Job> listCompanies = new List<Job>();
-
-            if (User.IsInRole(Rol.company.ToString()))
-            {
-                String idCompany = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
-                                   .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
-                listCompanies = db.GetListJobs().FindAll(x => x.id_company == idCompany);
-            }
-            else 
-            {
-                listCompanies = db.GetListJobs();
-            }
-         
-
-            for (int i = 0; i < listCompanies.Count; i++)
-            {
-                listCompanies[i].company = new CompanyBAL().GetCompany(listCompanies[i].id_company);
-            }
-
-            return View(listCompanies);
-        }
 
 
         // GET: Jobs/Create
@@ -258,27 +199,12 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(job);
         }
 
-        // GET: Jobs/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }            Job job=db.GetJob(id);
-            if (job == null)
-            {
-                return HttpNotFound();
-            }
-            return View(job);
-        }
 
-        // POST: Jobs/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+
         public ActionResult DeleteConfirmed(int id)
         {
             db.DeleteJob(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Jobs");
         }
 
         public ActionResult SendResume(int? id,String id_candidate, int? id_job,DateTime dateofaplication)

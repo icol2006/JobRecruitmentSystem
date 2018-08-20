@@ -92,7 +92,7 @@ namespace AppJobRecruitmentSystem.Controllers
                     return View(model);
             }
         }
-
+        /*
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
@@ -105,7 +105,8 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
-
+        */
+        /*
         //
         // POST: /Account/VerifyCode
         [HttpPost]
@@ -135,7 +136,8 @@ namespace AppJobRecruitmentSystem.Controllers
                     return View(model);
             }
         }
-
+        */
+        /*
         //
         // GET: /Account/Register
         [AllowAnonymous]
@@ -183,7 +185,7 @@ namespace AppJobRecruitmentSystem.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        */
         //
         // GET: /Account/Register
         [AllowAnonymous]
@@ -285,6 +287,7 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(model);
         }
 
+        /*
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -297,7 +300,8 @@ namespace AppJobRecruitmentSystem.Controllers
             var result = await UserManager.ConfirmEmailAsync(userId, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
-
+        */
+        /*
         //
         // GET: /Account/ForgotPassword
         [AllowAnonymous]
@@ -305,7 +309,8 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return View();
         }
-
+        */
+        /*
         //
         // POST: /Account/ForgotPassword
         [HttpPost]
@@ -316,7 +321,7 @@ namespace AppJobRecruitmentSystem.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null /*|| !(await UserManager.IsEmailConfirmedAsync(user.Id))*/)
+                if (user == null /*|| !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -333,7 +338,8 @@ namespace AppJobRecruitmentSystem.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        */
+        /*
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
@@ -341,7 +347,8 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return View();
         }
-
+        */
+        /*
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
@@ -349,7 +356,8 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return code == null ? View("Error") : View();
         }
-
+        */
+        /*
         //
         // POST: /Account/ResetPassword
         [HttpPost]
@@ -375,7 +383,8 @@ namespace AppJobRecruitmentSystem.Controllers
             AddErrors(result);
             return View();
         }
-
+        */
+        /*
         //
         // GET: /Account/ResetPasswordConfirmation
         [AllowAnonymous]
@@ -383,7 +392,8 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return View();
         }
-
+        */
+        /*
         //
         // POST: /Account/ExternalLogin
         [HttpPost]
@@ -394,7 +404,8 @@ namespace AppJobRecruitmentSystem.Controllers
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
-
+        */
+        /*
         //
         // GET: /Account/SendCode
         [AllowAnonymous]
@@ -409,7 +420,8 @@ namespace AppJobRecruitmentSystem.Controllers
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
             return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
-
+        */
+        /*
         //
         // POST: /Account/SendCode
         [HttpPost]
@@ -429,7 +441,8 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
-
+        */
+        /*
         //
         // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
@@ -459,7 +472,8 @@ namespace AppJobRecruitmentSystem.Controllers
                     return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
             }
         }
-
+*/
+/*
         //
         // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
@@ -497,7 +511,7 @@ namespace AppJobRecruitmentSystem.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
-
+        */
         //
         // POST: /Account/LogOff
         [HttpPost]
@@ -507,7 +521,7 @@ namespace AppJobRecruitmentSystem.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Jobs");
         }
-
+        /*
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
@@ -515,7 +529,7 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return View();
         }
-
+        */
         protected override void Dispose(bool disposing)
         {
             if (disposing)

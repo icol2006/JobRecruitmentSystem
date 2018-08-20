@@ -41,13 +41,13 @@ namespace AppJobRecruitmentSystem.Models
 
     public class ChangePasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Password actual es requerido")]
         [DataType(DataType.Password)]
         [Display(Name = "Password actual")]
         public string OldPassword { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Nuevo password es requerido")]
+        [StringLength(100, ErrorMessage = "El password debe ser de 6 caracteres como minimo", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Nuevo password")]
         public string NewPassword { get; set; }
@@ -56,6 +56,25 @@ namespace AppJobRecruitmentSystem.Models
         [Display(Name = "Confirmar nuevo password")]
         [Compare("NewPassword", ErrorMessage = "El password y la confirmacion del password no coinciden")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class ChangeEmailViewModel
+    {
+        [Required(ErrorMessage = "Email actual es requerido")]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email actual")]
+        public string OldEmail { get; set; }
+
+        [Required(ErrorMessage = "Nuevo email es requerido")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 5)]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Nuevo email")]
+        public string NewEmail{ get; set; }
+
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Confirmar nuevo email")]
+        [Compare("NewEmail", ErrorMessage = "El email y la confirmacion del email no coinciden")]
+        public string ConfirmEmail { get; set; }
     }
 
     public class AddPhoneNumberViewModel

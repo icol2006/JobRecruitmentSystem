@@ -13,15 +13,17 @@ using System.Net.Mime;
 using Microsoft.AspNet.Identity.Owin;
 using System.Reflection;
 using PagedList;
+using System.Threading.Tasks;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
+    [Authorize]
     public class JobAplicationsController : Controller
     {
         private JobAplicationBAL db = new JobAplicationBAL();
 
         // GET: JobAplicacions
-        public ActionResult Index( 
+        public async Task<ActionResult> Index( 
              string currentCompanyFilter, string currentJobFilter, string currentCandidateFilter,
              string currentDateStartFilter, string currentDateEndFilter,
              string searchcompany, string searchjob, string searchcandidate, 
@@ -91,8 +93,9 @@ namespace AppJobRecruitmentSystem.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                idUser = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
-                    .Users.ToList().Find(x => x.Email == User.Identity.Name).Id;
+                var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var user = await userManager.FindByEmailAsync(User.Identity.Name);
+                idUser = user.Id;                
             }
 
             
@@ -113,7 +116,7 @@ namespace AppJobRecruitmentSystem.Controllers
 
             return View(jobAplications);
         }
-
+        /*
         // GET: JobAplicacions/Details/5
         public ActionResult Details(int? id)
         {
@@ -129,32 +132,42 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return View(jobAplicacion);
         }
-
+        */
+        /*
         // GET: JobAplicacions/Create
         public ActionResult Create()
         {
             return View();
         }
-
+        */
         // POST: JobAplicacions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public ActionResult Create([Bind(Include = "id,id_candidate,id_job,dateofaplication")] JobAplication jobAplicacion)
         {
+            String result = "";
+            var countJobaplication= db.GetListJobAplicacions()
+                .Where(x=> x.id_candidate == jobAplicacion.id_candidate && 
+                       x.id_job == jobAplicacion.id_job).Count();
 
             if (ModelState.IsValid)
             {
-                db.InsertJobAplicacion(jobAplicacion);
-                return Json(new { success = true, responseText = "Tu curriculum ha sido enviado!" }, JsonRequestBehavior.AllowGet);
+                if(countJobaplication==0)
+                {
+                    db.InsertJobAplicacion(jobAplicacion);
+                }
+                result = "Tu curriculum ha sido enviado!";
+                return Json(new { success = true, responseText = result }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { success = false, responseText = "Error al enviar el curriculum" }, JsonRequestBehavior.AllowGet);
+                result = "Error al enviar el curriculum";
+                return Json(new { success = false, responseText = result }, JsonRequestBehavior.AllowGet);
             }
 
         }
-
+        /*
         [HttpGet]
         [ValidateAntiForgeryToken]
         public ActionResult Create(int? id, String id_candidate, int? id_job,DateTime dateofaplication)
@@ -167,7 +180,8 @@ namespace AppJobRecruitmentSystem.Controllers
             db.InsertJobAplicacion(JobAplicacion);
             return RedirectToAction("Index", " Jobs", null);
         }
-
+        */
+        /*
         // GET: JobAplicacions/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -184,7 +198,8 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return View(jobAplicacion);
         }
-
+        */
+        /*
         // POST: JobAplicacions/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -199,7 +214,8 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return View(jobAplicacion);
         }
-
+        */
+        /*
         // GET: JobAplicacions/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -214,7 +230,7 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return View(jobAplicacion);
         }
-
+        */
         // POST: JobAplicacions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

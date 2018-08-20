@@ -49,7 +49,7 @@ namespace AppJobRecruitmentSystem.Controllers
                 _userManager = value;
             }
         }
-
+        /*
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -73,8 +73,8 @@ namespace AppJobRecruitmentSystem.Controllers
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
             return View(model);
-        }
-
+        }*/
+        /*
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
@@ -98,14 +98,16 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return RedirectToAction("ManageLogins", new { Message = message });
         }
-
+        */
+        /*
         //
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
         {
             return View();
         }
-
+        */
+        /*
         //
         // POST: /Manage/AddPhoneNumber
         [HttpPost]
@@ -129,7 +131,8 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
         }
-
+        */
+        /*
         //
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
@@ -144,7 +147,8 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return RedirectToAction("Index", "Manage");
         }
-
+        */
+        /*
         //
         // POST: /Manage/DisableTwoFactorAuthentication
         [HttpPost]
@@ -159,7 +163,8 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return RedirectToAction("Index", "Manage");
         }
-
+        */
+        /*
         //
         // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
@@ -168,7 +173,8 @@ namespace AppJobRecruitmentSystem.Controllers
             // Send an SMS through the SMS provider to verify the phone number
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
-
+        */
+        /*
         //
         // POST: /Manage/VerifyPhoneNumber
         [HttpPost]
@@ -193,7 +199,8 @@ namespace AppJobRecruitmentSystem.Controllers
             ModelState.AddModelError("", "Failed to verify phone");
             return View(model);
         }
-
+        */
+        /*
         //
         // GET: /Manage/RemovePhoneNumber
         public async Task<ActionResult> RemovePhoneNumber()
@@ -210,7 +217,7 @@ namespace AppJobRecruitmentSystem.Controllers
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
-
+        */
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
@@ -243,12 +250,59 @@ namespace AppJobRecruitmentSystem.Controllers
         }
 
         //
+        // GET: /Manage/ChangePassword
+        public ActionResult ChangeEmail()
+        {
+            ChangeEmailViewModel changeEmailViewModel = new ChangeEmailViewModel();
+            changeEmailViewModel.OldEmail = User.Identity.Name;
+            return View(changeEmailViewModel);
+        }
+
+        //
+        // POST: /Manage/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeEmail(ChangeEmailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var userId = User.Identity.GetUserId();
+            
+
+                var user = await UserManager.FindByEmailAsync(User.Identity.Name);
+                user.Email = model.NewEmail;
+                user.UserName = model.NewEmail;
+                var result =await UserManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                /*user = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>()
+                    .Users.ToList().Find(x => x.Id == userId);*/
+                user = UserManager.FindById(userId);
+
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+
+                return RedirectToAction("Index", "Jobs");
+            }
+
+            AddErrors(result);
+            return View(model);
+        }
+
+        /*
+        //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
         {
             return View();
         }
-
+        */
+        /*
         //
         // POST: /Manage/SetPassword
         [HttpPost]
@@ -296,7 +350,8 @@ namespace AppJobRecruitmentSystem.Controllers
                 OtherLogins = otherLogins
             });
         }
-
+        */
+        /*
         //
         // POST: /Manage/LinkLogin
         [HttpPost]
@@ -306,7 +361,8 @@ namespace AppJobRecruitmentSystem.Controllers
             // Request a redirect to the external login provider to link a login for the current user
             return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
         }
-
+        */
+        /*
         //
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
@@ -319,7 +375,7 @@ namespace AppJobRecruitmentSystem.Controllers
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
-
+        */
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)

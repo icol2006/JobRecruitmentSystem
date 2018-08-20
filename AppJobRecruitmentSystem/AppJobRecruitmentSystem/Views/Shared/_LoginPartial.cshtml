@@ -1,11 +1,14 @@
 ﻿@using Microsoft.AspNet.Identity
+                        @using Microsoft.AspNet.Identity.Owin;
+                        @using Microsoft.AspNet.Identity; 
+
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
 
-        <div style="float:right">
+        <div style="float:right" class="loginactions">
             <ul class="navbar-nav mr-auto">
 
                 <!-- Dropdown -->
@@ -13,10 +16,41 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         @User.Identity.GetUserName()
                     </a>
+                    @{ 
 
+                        var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                        var idUsuer = User.Identity.GetUserId();
+                        var user= userManager.FindById(idUsuer);
+                        var rolId = user.Roles.FirstOrDefault().RoleId;
+                        var controllerName = "";
+
+                        switch (rolId)
+                        {
+                            case "1":
+                                controllerName = "";
+                                break;
+                            case "2":
+                                controllerName = "Candidates";
+                                break;
+                            case "3":
+                                controllerName = "Companies";
+                                break;
+                            default:
+                                break;
+                        }
+
+
+                    }
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#">
+                            
+                            @Html.ActionLink("Mi perfil", "Edit", @controllerName, new { id =@idUsuer  }, htmlAttributes: new { @class = "dropdown-item" }) 
+                        </a>
+                        <a class="dropdown-item" href="#">
                             @Html.ActionLink("Cambiar clave", "ChangePassword", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "dropdown-item" })
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            @Html.ActionLink("Cambiar email", "ChangeEmail", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "dropdown-item" })
                         </a>
                         <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">
                            Cerrar Sesion
@@ -31,7 +65,7 @@
 }
 else
 {
-    <div style="float:right">
+        <div style="float:right" class="loginactions">
         <ul class="navbar-nav mr-auto">
             <!-- Dropdown -->
             <li class="nav-item dropdown">
@@ -52,11 +86,10 @@ else
 
                     @Html.ActionLink("Iniciar sesion", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink",@class= "nav-item nav-link" })
             
-     
-
-
-
-        </ul>
+             </ul>
         </div>
 
         }
+
+
+ 

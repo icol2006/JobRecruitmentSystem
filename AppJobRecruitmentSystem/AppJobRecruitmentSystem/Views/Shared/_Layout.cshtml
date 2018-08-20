@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Bolsa de trabajo</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -81,6 +81,34 @@
     $.datepicker.setDefaults($.datepicker.regional['es']);
     $(function () {
         $("#fecha").datepicker();
+    });
+
+    $(".filteroptions").hide();
+    if (window.innerWidth < 500) {
+        $(".loginactions").css("float", "left");
+        $(".filter").click(function () {
+            $(".filteroptions").toggle();
+        });
+    } else {
+        $(".filteroptions").show();
+        $(".loginactions").css("float", "right");
+    }
+
+
+    $(document).ready(function () {
+        $(window).resize(function () {
+
+            if (window.innerWidth < 500) {
+                $(".loginactions").css("float", "left");
+                $(".filter").click(function () {
+                    $(".filteroptions").hide();
+                    $(".filteroptions").toggle();
+                });
+            } else {
+                $(".filteroptions").show();
+                $(".loginactions").css("float", "right");
+            }
+        });
     });
 
     </script>
