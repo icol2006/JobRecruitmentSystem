@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
+using DriveConsole;
+
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -23,13 +25,15 @@ namespace AppJobRecruitmentSystem.Controllers
     {
         private CompanyBAL db = new CompanyBAL();
 
-        /*
+    
         // GET: Companies
         public ActionResult Index()
         {
+ 
+
             return View(db.GetListCompanies());
         }
-        */
+     
         /*
         // GET: Companies/Details/5
         public ActionResult Details(String id)

@@ -53,7 +53,6 @@
                     @Html.ActionLink("Crear nueva oferta de trabajo", "Create", null, new { @class = "btn btn-primary btn-xs", })
                 </h5>
 
-
                 }
                     @if (User.IsInRole("administrator") || User.IsInRole("company"))
                 {
@@ -147,17 +146,18 @@
                         {
                 <div class="card">
                     <div class="card-header headercolor" style="font-weight:bolder;color:white">
-                        <p class="card-text">@Html.DisplayFor(modelItem => item.name) - @Html.DisplayFor(modelItem => item.company.name)</p>
+                        <h5 class="card-text" style="display: inline;">@Html.DisplayFor(modelItem => item.name)</h5>
+                        <h8 style="font-weight:bold;display: inline;float:right;color:#f3f2f2";> @Html.DisplayFor(modelItem => item.company.name)</h8>
                     </div>
                     <div class="card card-body">
-
+                        <h7 class="titleJobOffer">Descripcion del puesto</h7>
                         <p class="card-text">@Html.DisplayFor(modelItem => item.description, new { id = "description" })</p>
                         @if (User.IsInRole("candidate"))
                                     {
                                     <a href="#" class="card-link enviar"> Enviar Curriculum </a>
                                     }
-                        <h7 style="text-align:right;color:#545363;font-weight:100">Fecha Publicacion</h7>
-                        <h7 style="text-align:right;color:#f0b144;font-weight:lighter">@Html.DisplayFor(modelItem => item.date_publication)</h7>
+                        <h7 class="titleDateJobOffer">Fecha Publicacion</h7>
+                        <h7 class="dateJobOffer">@Html.DisplayFor(modelItem => item.date_publication)</h7>
                         <h7 style="text-align:left;"></h7>
 
                         @Html.Hidden("Iduser", (string)ViewBag.iduser)
@@ -228,9 +228,7 @@
 
     @section Scripts {
         <script>
-
-
-
+            
 
             $(function () {
 

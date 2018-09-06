@@ -1,0 +1,121 @@
+﻿@model AppJobRecruitmentSystem.Entities.Candidate
+
+<link href="~/Content/personaldata.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+ <div class="row">
+        <div class="col-md-4 col-lg-4">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal col-md-12">
+                    <h4>Actualizar informaction</h4>
+         
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.id)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.firtsname, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.firtsname, new { htmlAttributes = new { @class = "form-control col-md-12" } })
+                            @Html.ValidationMessageFor(model => model.firtsname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.lastname, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.lastname, new { htmlAttributes = new { @class = "form-control col-md-12" } })
+                            @Html.ValidationMessageFor(model => model.lastname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.identification, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.identification, new { htmlAttributes = new { @class = "form-control col-md-12" } })
+                            @Html.ValidationMessageFor(model => model.identification, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            Subir curriculum
+
+                            <input type="file" id="imageUploadForm" name="image" multiple="multiple" />
+                            <div class="loader"></div>
+
+                             @Html.HiddenFor(model => model.resume, new { htmlAttributes = new { @class = "form-control" } })
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" style="margin-top:20px" value="Salvar" class="btn btn-default" />
+                    </div>
+                </div>
+
+            }
+        </div>
+        <div class="col-md-8 col-lg-8">     
+          <iframe id="resumen" src="" class="col-md-12 col-lg-12" height="500"></iframe>            
+       </div>
+
+
+    </div>
+
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+
+
+<script>
+   /* var urlResume = "https://docs.google.com/file/d/" + $('#resume').val() + "/preview"*/
+    /*$('#res').attr('src', urlResume);*/
+    $(document).ready(function () {
+        $('.loader').hide();
+        $('#resumen').attr('src', '@Url.Action("getResume", "Candidates")');
+
+            
+        $("#imageUploadForm").change(function () {
+            $('.loader').show();
+            var formData = new FormData();
+            var totalFiles = document.getElementById("imageUploadForm").files.length;
+            for (var i = 0; i < totalFiles; i++) {
+                var file = document.getElementById("imageUploadForm").files[i];
+                var idCandidate = $('#id').val();
+                formData.append("imageUploadForm", file);
+                formData.append("id", idCandidate);
+            }
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Upload", "Candidates")',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    $('#resumen').attr('src', '@Url.Action("getResume", "Candidates")');
+                    $('.loader').hide();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('.loader').hide();
+                    alert('No se subio el archivo');                    
+                }
+            });
+        });
+
+
+    });
+</script>
+        }

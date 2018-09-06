@@ -14,6 +14,11 @@ using PagedList;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenXmlPowerTools;
+using System.IO.Packaging;
+using DocumentFormat.OpenXml.Packaging;
+using System.Xml.Linq;
+using System.Drawing.Imaging;
 
 namespace AppJobRecruitmentSystem.Controllers
 { 
@@ -21,11 +26,11 @@ namespace AppJobRecruitmentSystem.Controllers
     {
         private JobBAL db = new JobBAL();
 
-
         public async Task<ActionResult> Index(string sortOrder, string CurrentSort, int? page,
              string currentFilter, string currentDateStart, string currentDateEnd,
              string searchString, string searchDateStart, string searchDateEnd, string id_category)
         {
+
             int pageSize = 6;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
@@ -88,12 +93,6 @@ namespace AppJobRecruitmentSystem.Controllers
 
                 var user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindByEmailAsync(System.Web.HttpContext.Current.User.Identity.Name);
                 var userid =  userManager.FindByEmailAsync(System.Web.HttpContext.Current.User.Identity.Name).Id;
-                var ds = 5;
-                //var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                // var user = await userManager.FindByEmailAsync(User.Identity.Name);
-                //idUser = idUser;
-
-
             }
 
 
@@ -130,13 +129,14 @@ namespace AppJobRecruitmentSystem.Controllers
 
             Job job = new Job();
             job.company=new CompanyBAL().GetCompany(idCompany);
-
+            job.enable_job = true;
+            job.date_publication = System.DateTime.Now;
             //ViewBag.IdCompany = idCompany;
             //SelectListItem basetypes = new SelectListItem(new CompanyBAL().GetCompany(idCompany),"id","name" );
             //SelectList li=new SelectList(new CategoryBAL().GetListCategories(), "id", "name");
             ViewData["id_category"] = new SelectList(new CategoryBAL().GetListCategories(), "id", "name");
 
-            return View();
+            return View(job);
         }
 
         // POST: Jobs/Create
@@ -217,13 +217,5 @@ namespace AppJobRecruitmentSystem.Controllers
              return RedirectToAction("Create", " JobAplications", new { id = 0, id_candidate = ViewBag.iduser, id_job = id_job, dateofaplication = System.DateTime.Now });
         }
 
-        /*protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }*/
     }
 }

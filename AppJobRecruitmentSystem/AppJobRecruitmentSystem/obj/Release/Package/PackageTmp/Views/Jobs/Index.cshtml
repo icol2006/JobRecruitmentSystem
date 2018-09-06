@@ -1,0 +1,303 @@
+﻿@model PagedList.IPagedList<AppJobRecruitmentSystem.Entities.Job>
+
+@using PagedList.Mvc;
+
+<script src="∼/Scripts/jquery.unobtrusive-ajax.js"></script>
+@{
+    ViewBag.Title = "Listado Ofertas de Trabajos";
+}
+
+<h2>Listado Ofertas de Trabajos</h2>
+
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-3 col-lg-3 areaSearch" style="margin-bottom:15px">
+            <div class="card">
+                <div class="card-header" style="background-color: #597ce1;color:white">
+                    <h5 class="card-title filter">Filtro</h5>
+                </div>
+                <div class="card-body filteroptions">
+
+                    @using (Html.BeginForm("Index", "Jobs", FormMethod.Get))
+                    {
+                        <p>
+                            Buscar por puesto:
+                            @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, htmlAttributes: new { @class = "form-control col-md-12" })
+                            Fecha inicio de publicacion oferta de trabajo
+                            @Html.TextBox("SearchDateStart", ViewBag.CurrentStartFilter as string, htmlAttributes: new { @class = "form-control col-md-12 datepicker" })
+                            Fecha final de publicacion oferta de trabajo
+                            @Html.TextBox("SearchDateEnd", ViewBag.CurrentEndFilter as string, htmlAttributes: new { @class = "form-control col-md-12 datepicker" })
+                            Categoria
+                            @Html.DropDownList("id_category", null, htmlAttributes: new { @class = "form-control col-md-12" })
+
+                            <br />
+                            <br />
+                            <input type="submit" value="Buscar" />
+                        </p>
+                    }
+                </div>
+            </div>
+            <br /><br />
+        </div>
+        
+        <div class="col-md-9 col-lg-9">
+
+            @if (User.IsInRole("administrator") || User.IsInRole("company"))
+            {
+                <div class="areaAdministradores" style="overflow: scroll;width:100%;height: 85%;">
+                    @if (User.IsInRole("company"))
+                {
+                <h5>
+                    @Html.ActionLink("Crear nueva oferta de trabajo", "Create", null, new { @class = "btn btn-primary btn-xs", })
+                </h5>
+
+                }
+                    @if (User.IsInRole("administrator") || User.IsInRole("company"))
+                {
+                <table class="table">
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        @if (!User.IsInRole("company"))
+                            {
+                            <th>
+                                Empresa
+                            </th>
+                            }
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstOrDefault().name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstOrDefault().date_publication)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstOrDefault().enable_job)
+                        </th>
+
+                        @if (User.IsInRole("candidate"))
+                            {
+                            <th>
+
+                            </th>
+                            }
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstOrDefault().category.name)
+                        </th>
+
+                        <th style="width:200px"></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                        {
+
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.id)
+                            </td>
+                            @if (!User.IsInRole("company"))
+                                {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.company.name)
+                                </td>
+                                }
+                            <td>
+                                @Html.DisplayFor(modelItem => item.name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.date_publication)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.enable_job)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.category.name)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Editar", "Edit", new { id = item.id }, new { @class = "btn btn-info btn-xs", @Style = "width: 80px;margin-bottom: 5px;" })
+                                @Html.ActionLink("Eliminar", "DeleteConfirmed", new { id = item.id }, new { @class = "btn btn-danger btn-xs", @Style = "width: 80px", onclick = "return confirm('Esta seguro que quieres eliminar este registro?');" })
+
+                            </td>
+                            @Html.Hidden("Iduser", (string)ViewBag.iduser)
+                            @Html.HiddenFor(modelItem => item.id)
+                            @Html.HiddenFor(modelItem => item.id_category)
+
+                        </tr>
+                            ;
+
+                        }
+                </table>
+                }
+                </div>
+            }
+
+            <div class="areaCandidatos ">
+                @if (User.IsInRole("candidate") || !User.Identity.IsAuthenticated)
+                {
+                    foreach (var item in Model)
+                    {
+                        if (item.enable_job.Equals(true) || (User.IsInRole("administrator") || User.IsInRole("company")))
+                        {
+                <div class="card">
+                    <div class="card-header headercolor" style="font-weight:bolder;color:white">
+                        <h5 class="card-text" style="display: inline;">@Html.DisplayFor(modelItem => item.name)</h5>
+                        <h8 style="font-weight:bold;display: inline;float:right;color:#f3f2f2";> @Html.DisplayFor(modelItem => item.company.name)</h8>
+                    </div>
+                    <div class="card card-body">
+                        <h7 class="titleJobOffer">Descripcion del puesto</h7>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.description, new { id = "description" })</p>
+                        @if (User.IsInRole("candidate"))
+                                    {
+                                    <a href="#" class="card-link enviar"> Enviar Curriculum </a>
+                                    }
+                        <h7 class="titleDateJobOffer">Fecha Publicacion</h7>
+                        <h7 class="dateJobOffer">@Html.DisplayFor(modelItem => item.date_publication)</h7>
+                        <h7 style="text-align:left;"></h7>
+
+                        @Html.Hidden("Iduser", (string)ViewBag.iduser)
+                        @Html.HiddenFor(modelItem => item.id)
+                        @Html.HiddenFor(modelItem => item.id_category)
+                    </div>
+                </div>
+
+                <br />
+                                 }
+                    }
+                }
+            </div>
+
+            <div id='pagination' style="text-align: center;">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                of @Model.PageCount
+
+                <nav aria-label="Page navigation example" style="justify-content-center" class="pagination pagination-sm">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page,
+                   currentFilter = ViewBag.CurrentFilter,
+                   currentDateStart = ViewBag.CurrentStartFilter,
+                   currentDateEnd = ViewBag.CurrentEndFilter,
+                   id_category=ViewBag.id_category.SelectedValue,
+
+               }), new PagedListRenderOptions
+               {
+                   DisplayEllipsesWhenNotShowingAllPageNumbers= false,
+                   DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                   DisplayLinkToLastPage = PagedListDisplayMode.Never,
+                   DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                   DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                   MaximumPageNumbersToDisplay = 5
+               })
+                </nav>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+  <!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="titleresult">Resultado</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" id="bodyresult">
+                Modal body..
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+    @section Scripts {
+        <script>
+            
+
+            $(function () {
+
+                $(".enviar").click(function () {
+                    var jobAplicacion = {};
+                    jobAplicacion.id_candidate = $(this).closest(".card-body").find("#Iduser").val();
+                    jobAplicacion.id_job = $(this).closest(".card-body").find("#item_id").val();
+                    jobAplicacion.dateofaplication = getDate();
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Create","JobAplications")',
+                        data: '{jobAplicacion: ' + JSON.stringify(jobAplicacion) + '}',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (Message) {
+                            $('#myModal').modal('show');
+                            $('#titleresult').text("Muchas gracias");
+                            $('#bodyresult').text(Message.responseText);
+                        },
+                        error: function (Message) {
+                            $('#myModal').modal('show');
+                            $('#titleresult').text("No se pudo enviar el curriculum");
+                            $('#bodyresult').text(Message.responseText);
+                        }
+                    });
+                    return false;
+                });
+            });
+
+            function getDate() {
+                var d = new Date();
+
+                var month = d.getMonth() + 1;
+                var day = d.getDate();
+
+                var output = d.getFullYear() + '/' +
+                    (month < 10 ? '0' : '') + month + '/' +
+                    (day < 10 ? '0' : '') + day;
+
+                return output;
+            }
+
+
+            $(document).ready(function() {
+                $("#imageUploadForm").change(function() {
+                    var formData = new FormData();
+                    var totalFiles = document.getElementById("imageUploadForm").files.length;
+                    for (var i = 0; i < totalFiles; i++) {
+                        var file = document.getElementById("imageUploadForm").files[i];
+                        formData.append("imageUploadForm", file);
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Upload", "Jobs")',
+                        data: formData,
+                        dataType: 'json',
+                        contentType: false,
+                        processData: false,
+                        success: function (Message) {
+                            alert(Message.responseText);
+
+                        },
+                        error: function (Message) {
+                            alert(Message.responseText);
+                        }
+                    });
+                });
+            });
+
+        </script>
+    }

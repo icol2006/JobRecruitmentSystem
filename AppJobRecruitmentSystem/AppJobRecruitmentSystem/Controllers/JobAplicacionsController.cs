@@ -231,9 +231,7 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(jobAplicacion);
         }
         */
-        // POST: JobAplicacions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+
         public ActionResult DeleteConfirmed(int id)
         {
             db.DeleteJobAplicacion(id);

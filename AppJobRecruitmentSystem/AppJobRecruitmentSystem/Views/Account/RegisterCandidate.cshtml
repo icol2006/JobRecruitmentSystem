@@ -10,7 +10,7 @@
    
 
 
-    @using (Html.BeginForm("RegisterCandidate", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    @using (Html.BeginForm("RegisterCandidate", "Account", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
         <hr />
@@ -37,11 +37,15 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Resume, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12 control-label" style="margin-bottom:10px">
+                            Curriculum(Solo formato word)
+                        </div>
                         <div class="col-md-12">
-                            @Html.TextBoxFor(m => m.Resume, new { @class = "form-control" })
+                            <input type="file" id="imageUploadForm" name="image" multiple="multiple" />
+                            <div class="loader"></div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="col-md-6">

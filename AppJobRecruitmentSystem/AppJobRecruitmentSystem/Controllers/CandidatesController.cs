@@ -13,8 +13,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System.IO;
-using Google.Apis.Drive.v3;
+//using Google.Apis.Drive.v3;
 using Microsoft.AspNet.Identity;
+using Microsoft.Office.Interop.Word;
+using System.IO.Packaging;
+using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools;
+using System.Xml.Linq;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -22,127 +27,7 @@ namespace AppJobRecruitmentSystem.Controllers
     public class CandidatesController : Controller
     {
         private CandidateBAL db = new CandidateBAL();
-        // GET: Candidates
-        /*
-        public ActionResult Index()
-        {            
-            return View(db.GetListCandidates());
-        }
-        */
-        /*
-        public async Task<ActionResult> loadCandidates()
-        {
-            List<Candidate> listCandidate = new List<Candidate>();
-            CandidateBAL can = new CandidateBAL();
 
-            List<Candidate> list = getCandidates();
-
-            foreach (Candidate pCandidate in list)
-            {
-                var UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-
-                var user = new ApplicationUser { UserName = pCandidate.email, Email = pCandidate.email };
-                IdentityUserRole rol = new IdentityUserRole();
-
-                var result = await UserManager.CreateAsync(user, pCandidate.password);
-
-                var result2 = await UserManager.AddToRoleAsync(user.Id, "1");
-
-                pCandidate.id = user.Id;
-                if (result.Succeeded && result2.Succeeded)
-                {
-                    new CandidateBAL().InsertCandidate(pCandidate);
-                }
-            }
-
-
-            list = new List<Candidate>();
-            list = can.GetListCandidates();
-
-           Candidate x= can.GetCandidate(list[0].id);
-
-            return View(list);
-
-        }
-        */
-        /*
-        public List<Candidate> getCandidates()
-        {
-            List<Candidate> listCandidate = new List<Candidate>();
-            Candidate candidate = new Candidate();
-
-            candidate.email = "adskjl@al.com";
-            candidate.firtsname = "dasl";
-            candidate.identification = 43;
-            candidate.password = "Pescado03-";
-            listCandidate.Add(candidate);
-
-            candidate = new Candidate();
-            candidate.email = "adskjl2@al.com";
-            candidate.firtsname = "dasl2";
-            candidate.identification = 432;
-            candidate.password = "Pescado03-";
-            listCandidate.Add(candidate);
-
-            candidate = new Candidate();
-            candidate.email = "adskjl3@al.com";
-            candidate.firtsname = "dasl3";
-            candidate.identification = 433;
-            candidate.password = "Pescado03-";
-            listCandidate.Add(candidate);
-
-            return listCandidate;
-        }
-        */
-        /*
-        // GET: Candidates/Details/5
-        public ActionResult Details(String id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Candidate candidate = new Candidate();
-            candidate.id =(String) id;
-            candidate = db.GetCandidate(candidate.id);
-            if (candidate == null)
-            {
-                return HttpNotFound();
-            }
-            return View(candidate);
-        }
-        */
-        /*
-        // GET: Candidates/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-        */
-        /*
-        public FileStreamResult GetPDF()
-        {
-            FileStream fs = new FileStream("c:\\cover.pdf", FileMode.Open, FileAccess.Read);
-            return File(fs, "application/pdf");
-        }
-        */
-        /*
-        // POST: Candidates/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,firtsname,lastname,identification,resume")] Candidate candidate)
-        {
-            if (ModelState.IsValid)
-            {
-                db.InsertCandidate(candidate);
-                return RedirectToAction("Index");
-            }
-
-            return View(candidate);
-        }
-        */
         // GET: Candidates/Edit/5
         public ActionResult Edit(string id)
         {
@@ -179,41 +64,152 @@ namespace AppJobRecruitmentSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<String> Upload()
+        public String Upload()
         {
-            String resultado = "",  idCandidate="";
-            DriveGoogle drivegoogle = new DriveGoogle();
+            String resumen = "",  idCandidate="",result="";
 
-            idCandidate = Request.Form.GetValues("id")[0];
-
-            DriveService driveService = await drivegoogle.GetService();
-            drivegoogle.DownloadDirectoryName = Server.MapPath("~/App_Data/");
-
-            for (int i = 0; i < Request.Files.Count; i++)
+            try
             {
-                var file = Request.Files[i];
+                idCandidate = Request.Form.GetValues("id")[0];
 
-                if (file.ContentType.Equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                for (int i = 0; i < Request.Files.Count; i++)
                 {
-                    var fileName = Path.GetFileName(file.FileName);
+                    var file = Request.Files[i];
 
-                    var path = Path.Combine(Server.MapPath("~/App_Data/"), fileName);
-                    file.SaveAs(path);
+                    if (file.ContentType.Equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                    {
+                        var ext = Path.GetExtension(Path.GetFileName(file.FileName));
 
-                    drivegoogle.fileName = fileName;
+                        resumen = idCandidate + ext;
+                        var path = Path.Combine(Server.MapPath("~/App_Data/"), resumen);
+                        file.SaveAs(path);
+                        result = convertHtml();
 
-                    await drivegoogle.UploadFile(driveService);
+                        var candidate = db.GetCandidate(idCandidate);
+                        candidate.resume = resumen;
+                        db.UpdateCandidate(candidate);
 
-                    resultado= drivegoogle.uploadedFile.Id;
-                    var candidate=  db.GetCandidate(idCandidate);
-                    candidate.resume = resultado;
-                    db.UpdateCandidate(candidate);
-
+                    }
                 }
+
+            }
+            catch (Exception ex)
+            {
+
+                result = ex.Message;
+            }
+  
+            return result;
+            
+        }
+
+
+        public String getResume(String id)
+        {
+           String path = Server.MapPath("~/App_Data/"), userid="",result="";
+
+
+            if (id == null)
+            {
+                userid = User.Identity.GetUserId();
+            }
+            else
+            {
+                userid = id;
             }
 
-            return resultado;
+            result = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/"+ userid+".html"));
+
+            return result;
         }
+
+        public String convertHtml()
+        {
+            String filename = "", path = "", userid = "",  originalFile = "";
+
+            userid = User.Identity.GetUserId();
+
+
+            path = Server.MapPath("~/App_Data/");
+
+            if (System.IO.File.Exists(path + userid + ".doc"))
+            {
+                filename = userid + ".doc";
+            }
+            if (System.IO.File.Exists(path + userid + ".docx"))
+            {
+                filename = userid + ".docx";
+            }
+
+            originalFile = path + filename;
+
+            //var source = Package.Open(originalFile);
+            var document = WordprocessingDocument.Open(originalFile,true);           
+            HtmlConverterSettings settings = new HtmlConverterSettings();
+            XElement html = HtmlConverter.ConvertToHtml(document, settings);
+            var writer = System.IO.File.CreateText(path+userid+".html");
+            writer.WriteLine(html.ToString());
+            writer.Dispose();
+            document.Close();
+
+            return (html.ToString());
+        }
+
+        [HttpGet]
+        public ActionResult GetFile(String candidateId)
+        {
+            String filename = "", path="", ext="";
+            String userid = "";
+  
+            if (candidateId == null)
+            {
+                userid = User.Identity.GetUserId();
+            }else
+            {
+                userid = candidateId;
+            }
+
+           
+            path = Server.MapPath("~/App_Data/");
+
+            if (System.IO.File.Exists(path+userid+".doc"))
+            {
+                filename = userid + ".doc";
+            }
+            if (System.IO.File.Exists(path+userid + ".docx"))
+            {
+                filename = userid + ".docx";
+            }
+
+            String originalFile =path+filename;
+            ext = Path.GetExtension(filename);
+
+            return File(originalFile, "application/vnd.openxmlformats-officedocument.wordprocessingml.document",RandomString(12)+ ext);
+        }
+
+        public string RandomString(int length)
+        {
+           Random random = new Random();
+
+         string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+
+        public void DeleteFile()
+        {
+            String path = Server.MapPath("~/App_Data/");
+            String userid = User.Identity.GetUserId();
+
+            String convertedFile = path + userid + ".pdf";
+
+            if (System.IO.File.Exists(convertedFile))
+            {
+                     System.IO.File.Delete(convertedFile);
+            }
+        }
+        
 
         // GET: Candidates/Delete/5
         /* public ActionResult Delete(int? id)

@@ -11,6 +11,11 @@ using Microsoft.Owin.Security;
 using AppJobRecruitmentSystem.Models;
 using AppJobRecruitmentSystem.Entities;
 using AppJobRecruitmentSystem.BAL;
+using System.IO;
+using System.Net.Mail;
+using System.Net;
+using System.Net.Configuration;
+using System.Configuration;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -201,6 +206,13 @@ namespace AppJobRecruitmentSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterCandidate(RegisterCandidateViewModel model)
         {
+            var file = Request.Files[0];
+            if (file.FileName.Trim().Count() == 0)
+            {
+                ModelState.AddModelError("File", "Curriculum es obligatorio");
+            }
+               
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
@@ -211,9 +223,11 @@ namespace AppJobRecruitmentSystem.Controllers
                     {
                         await UserManager.AddToRoleAsync(user.Id, "candidate");
 
+                        Upload(file, user.Id);
+
                         new CandidateBAL().InsertCandidate(new Candidate(user.Id, Rol.candidate, model.FirstName, 
                           model.LastName, model.identification, model.Resume));
-
+                        
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                         // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -222,7 +236,7 @@ namespace AppJobRecruitmentSystem.Controllers
                         // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Jobs");
                     }
                     AddErrors(result);
                 }
@@ -235,6 +249,30 @@ namespace AppJobRecruitmentSystem.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private void Upload(HttpPostedFileBase postedFile,String id)
+        {
+            String resumen = "", idCandidate = "";
+            CandidateBAL candidateBAL = new CandidateBAL();
+            idCandidate = id;
+
+                 var file = postedFile;
+
+                if (file.ContentType.Equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                {
+                    var ext = Path.GetExtension(Path.GetFileName(file.FileName));
+
+                    resumen = idCandidate + ext;
+                    var path = Path.Combine(Server.MapPath("~/App_Data/"), resumen);
+                    file.SaveAs(path);
+
+                    var candidate = candidateBAL.GetCandidate(idCandidate);
+                    candidate.resume = resumen;
+                    candidateBAL.UpdateCandidate(candidate);
+                
+            }
+
         }
 
         //
@@ -272,7 +310,7 @@ namespace AppJobRecruitmentSystem.Controllers
                         // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Jobs");
                     }
                     AddErrors(result);
                 }
@@ -301,7 +339,7 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
         */
-        /*
+        
         //
         // GET: /Account/ForgotPassword
         [AllowAnonymous]
@@ -309,8 +347,8 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return View();
         }
-        */
-        /*
+        
+        
         //
         // POST: /Account/ForgotPassword
         [HttpPost]
@@ -321,7 +359,7 @@ namespace AppJobRecruitmentSystem.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null /*|| !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null /*|| !(await UserManager.IsEmailConfirmedAsync(user.Id))*/)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -329,17 +367,43 @@ namespace AppJobRecruitmentSystem.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                String code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                code = System.Web.HttpUtility.UrlEncode(code);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                //SendMail3(user.Email, "Haga click en el link para resear tu password <a href=\"" + callbackUrl + "\">here</a>");
+                SendMail(user.Email, "Haga click en el link para resear tu password <a href=\"" + callbackUrl + "\">here</a>");
+
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-        */
-        /*
+    
+ 
+
+        private void SendMail(String emailTo, String message)
+        {
+            SmtpSection secObj = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+            
+            SmtpClient SmtpServer = new SmtpClient(secObj.Network.Host);
+            var mail = new MailMessage();
+            mail.From = new MailAddress(secObj.From);
+            mail.To.Add(emailTo);
+            mail.Subject = "Admin Sistema bolsa de empleo";
+            mail.IsBodyHtml = true;
+            string htmlBody;
+            htmlBody = message;
+            mail.Body = htmlBody;
+            SmtpServer.Port = secObj.Network.Port;
+            SmtpServer.UseDefaultCredentials = secObj.Network.DefaultCredentials;
+            SmtpServer.Credentials = new System.Net.NetworkCredential(secObj.Network.UserName, secObj.Network.Password);
+            SmtpServer.EnableSsl = secObj.Network.EnableSsl;
+            SmtpServer.Send(mail);
+        }
+
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
@@ -347,8 +411,8 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return View();
         }
-        */
-        /*
+        
+        
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
@@ -356,8 +420,8 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return code == null ? View("Error") : View();
         }
-        */
-        /*
+        
+        
         //
         // POST: /Account/ResetPassword
         [HttpPost]
@@ -375,7 +439,10 @@ namespace AppJobRecruitmentSystem.Controllers
                 // Don't reveal that the user does not exist
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            var code = WebUtility.UrlDecode(model.Code);
+            code = code.Replace(' ', '+');
+
+            var result = await UserManager.ResetPasswordAsync(user.Id, code, model.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -383,8 +450,8 @@ namespace AppJobRecruitmentSystem.Controllers
             AddErrors(result);
             return View();
         }
-        */
-        /*
+        
+        
         //
         // GET: /Account/ResetPasswordConfirmation
         [AllowAnonymous]
@@ -392,7 +459,7 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             return View();
         }
-        */
+        
         /*
         //
         // POST: /Account/ExternalLogin

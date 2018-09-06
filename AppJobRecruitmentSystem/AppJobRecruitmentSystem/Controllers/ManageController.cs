@@ -269,8 +269,7 @@ namespace AppJobRecruitmentSystem.Controllers
                 return View(model);
             }
             var userId = User.Identity.GetUserId();
-            
-
+                  
                 var user = await UserManager.FindByEmailAsync(User.Identity.Name);
                 user.Email = model.NewEmail;
                 user.UserName = model.NewEmail;
