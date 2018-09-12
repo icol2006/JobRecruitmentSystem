@@ -38,6 +38,17 @@ namespace AppJobRecruitmentSystem.Controllers
             Candidate candidate = new Candidate();
             candidate.id = id;
             candidate = db.GetCandidate(candidate.id);
+
+
+            List<SelectListItem> lst = new List<SelectListItem>();
+
+            lst.Add(new SelectListItem() { Text = "Soltero(a)", Value = "Soltero(a)" });
+            lst.Add(new SelectListItem() { Text = "Casado(a)", Value = "Casado(a)" });
+            lst.Add(new SelectListItem() { Text = "Viudo(a)", Value = "Viudo(a)" });
+            lst.Where(x => x.Value.Equals(candidate.maritalStatus.Trim())).FirstOrDefault().Selected=true;
+
+            ViewBag.maritalStatus = lst;
+
             if (candidate == null)
             {
                 return HttpNotFound();
@@ -50,7 +61,7 @@ namespace AppJobRecruitmentSystem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "id,firtsname,lastname,identification,resume")] Candidate candidate)
+        public async Task<ActionResult> Edit([Bind(Include = "id,firtsname,lastname,identification,resume,maritalStatus,placeResidence,phone,Birthdate,Nationality")] Candidate candidate)
         {
             ModelState.Remove("email");
 
@@ -59,6 +70,16 @@ namespace AppJobRecruitmentSystem.Controllers
                 db.UpdateCandidate(candidate);
                 return RedirectToAction("Index","Jobs");
             }
+
+
+            List<SelectListItem> lst = new List<SelectListItem>();
+
+            lst.Add(new SelectListItem() { Text = "Soltero(a)", Value = "Soltero(a)"});
+            lst.Add(new SelectListItem() { Text = "Casado(a)", Value = "Casado(a)" });
+            lst.Add(new SelectListItem() { Text = "Viudo(a)", Value = "Viudo(a)" });
+            lst.Where(x => x.Value.Equals(candidate.maritalStatus.Trim())).FirstOrDefault().Selected=true;
+            
+            ViewBag.maritalStatus = lst;
 
             return View(candidate);
         }
@@ -71,6 +92,12 @@ namespace AppJobRecruitmentSystem.Controllers
             try
             {
                 idCandidate = Request.Form.GetValues("id")[0];
+
+                if (!Directory.Exists(Server.MapPath("~/App_Data/")))
+                {
+                    Directory.CreateDirectory(Server.MapPath("~/App_Data/"));
+                }
+
 
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
@@ -209,7 +236,19 @@ namespace AppJobRecruitmentSystem.Controllers
                      System.IO.File.Delete(convertedFile);
             }
         }
-        
+
+        [AllowAnonymous]
+        public FileResult DownloadCandidateManual()
+        {
+            if(!Directory.Exists(Server.MapPath("~/App_Data/")))
+            {
+                Directory.CreateDirectory(Server.MapPath("~/App_Data/"));
+            }
+            byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/App_Data/" + "Manual de ayuda de Usuarios.pdf"));
+            string fileName = "Manual de ayuda de Usuarios.pdf";
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, fileName);
+        }
+
 
         // GET: Candidates/Delete/5
         /* public ActionResult Delete(int? id)

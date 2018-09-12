@@ -23,6 +23,7 @@ namespace AppJobRecruitmentSystem.Controllers
         private JobAplicationBAL db = new JobAplicationBAL();
 
         // GET: JobAplicacions
+
         public async Task<ActionResult> Index( 
              string currentCompanyFilter, string currentJobFilter, string currentCandidateFilter,
              string currentDateStartFilter, string currentDateEndFilter,
@@ -31,7 +32,7 @@ namespace AppJobRecruitmentSystem.Controllers
         {
             List<JobAplication> list = db.GetListJobAplicacions();
             String idUser = "";
-            int pageSize = 6;
+            int pageSize = 30;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
 
@@ -116,6 +117,7 @@ namespace AppJobRecruitmentSystem.Controllers
 
             return View(jobAplications);
         }
+
         /*
         // GET: JobAplicacions/Details/5
         public ActionResult Details(int? id)
@@ -166,6 +168,47 @@ namespace AppJobRecruitmentSystem.Controllers
                 return Json(new { success = false, responseText = result }, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        public ActionResult Details(int idJob)
+        {
+            JobApplicationDetails jobApplicationDetails = new JobApplicationDetails();
+            Candidate candidate = new Candidate();
+            jobApplicationDetails.job = new JobBAL().GetJob(idJob);
+            List<JobAplication> listjobAplications=  db.GetJobAplicacionByIdJob(idJob);
+            JobApplicationInfo jobApplicationInfo = new JobApplicationInfo();
+
+            List<JobApplicationInfo> listJobApplicationInfo = new List<JobApplicationInfo>();
+            
+            for (int i = 0; i < listjobAplications.Count; i++)
+            {
+                candidate= new CandidateBAL().GetCandidate(listjobAplications[i].id_candidate);
+                jobApplicationInfo.firtsname = candidate.firtsname;
+                jobApplicationInfo.identification = candidate.identification;
+                jobApplicationInfo.id_candidate = candidate.id;
+                jobApplicationInfo.lastname = candidate.lastname;
+                jobApplicationInfo.resume = candidate.resume;
+               
+              
+
+                jobApplicationInfo.id_jobOffer = listjobAplications[i].id;
+                jobApplicationInfo.dateofaplication = listjobAplications[i].dateofaplication;
+
+                jobApplicationInfo.maritalStatus = candidate.maritalStatus;
+                jobApplicationInfo.placeResidence = candidate.placeResidence;
+                jobApplicationInfo.phone = candidate.phone;
+                jobApplicationInfo.birthdate = candidate.birthdate;
+                jobApplicationInfo.nationality = candidate.nationality;
+
+                listJobApplicationInfo.Add(jobApplicationInfo);
+                jobApplicationInfo = new JobApplicationInfo();
+                candidate = new Candidate();
+            }
+
+
+            jobApplicationDetails.listJobApplicationInfo = listJobApplicationInfo;
+
+            return View(jobApplicationDetails);
         }
         /*
         [HttpGet]

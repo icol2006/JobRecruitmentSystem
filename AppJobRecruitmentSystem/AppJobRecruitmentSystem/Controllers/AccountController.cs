@@ -16,6 +16,10 @@ using System.Net.Mail;
 using System.Net;
 using System.Net.Configuration;
 using System.Configuration;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools;
+using System.Xml.Linq;
 
 namespace AppJobRecruitmentSystem.Controllers
 {
@@ -196,6 +200,14 @@ namespace AppJobRecruitmentSystem.Controllers
         [AllowAnonymous]
         public ActionResult RegisterCandidate()
         {
+            List<SelectListItem> lst = new List<SelectListItem>();
+
+            lst.Add(new SelectListItem() { Text = "Soltero(a)", Value = "Soltero(a)",Selected=true });
+            lst.Add(new SelectListItem() { Text = "Casado(a)", Value = "Casado(a)" });
+            lst.Add(new SelectListItem() { Text = "Viudo(a)", Value = "Viudo(a)" });
+
+            ViewBag.maritalStatus = lst;
+
             return View();
         }
 
@@ -206,6 +218,8 @@ namespace AppJobRecruitmentSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterCandidate(RegisterCandidateViewModel model)
         {
+
+
             var file = Request.Files[0];
             if (file.FileName.Trim().Count() == 0)
             {
@@ -223,11 +237,14 @@ namespace AppJobRecruitmentSystem.Controllers
                     {
                         await UserManager.AddToRoleAsync(user.Id, "candidate");
 
+                        
+
+                        new CandidateBAL().InsertCandidate(new Candidate(user.Id, Rol.candidate, model.FirstName,
+                          model.LastName, model.identification, model.Resume, model.maritalStatus, model.placeResidence,
+                          model.phone,model.birthdate,model.nationality));
+
                         Upload(file, user.Id);
 
-                        new CandidateBAL().InsertCandidate(new Candidate(user.Id, Rol.candidate, model.FirstName, 
-                          model.LastName, model.identification, model.Resume));
-                        
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                         // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -247,6 +264,16 @@ namespace AppJobRecruitmentSystem.Controllers
 
             }
 
+            List<SelectListItem> lst = new List<SelectListItem>();
+
+            lst.Add(new SelectListItem() { Text = "Soltero(a)", Value = "Soltero(a)" });
+            lst.Add(new SelectListItem() { Text = "Casado(a)", Value = "Casado(a)" });
+            lst.Add(new SelectListItem() { Text = "Viudo(a)", Value = "Viudo(a)" });
+            lst.Where(x => x.Value.Equals(model.maritalStatus.Trim())).FirstOrDefault().Selected = true;
+
+
+            ViewBag.maritalStatus = lst;
+
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -257,7 +284,14 @@ namespace AppJobRecruitmentSystem.Controllers
             CandidateBAL candidateBAL = new CandidateBAL();
             idCandidate = id;
 
-                 var file = postedFile;
+            try
+            {
+                var file = postedFile;
+
+                if (!Directory.Exists(Server.MapPath("~/App_Data/")))
+                {
+                    Directory.CreateDirectory(Server.MapPath("~/App_Data/"));
+                }
 
                 if (file.ContentType.Equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
                 {
@@ -266,14 +300,52 @@ namespace AppJobRecruitmentSystem.Controllers
                     resumen = idCandidate + ext;
                     var path = Path.Combine(Server.MapPath("~/App_Data/"), resumen);
                     file.SaveAs(path);
+                    convertHtml(path,idCandidate);
 
                     var candidate = candidateBAL.GetCandidate(idCandidate);
                     candidate.resume = resumen;
                     candidateBAL.UpdateCandidate(candidate);
-                
+
+                }
+            }
+            catch (Exception ex)
+            {
+                int d = 0;
+               
             }
 
+
         }
+
+        public void convertHtml(String filePath, String userid)
+        {
+            String filename = "", path = "",  originalFile = "";
+
+
+            /*path = Server.MapPath("~/App_Data/");
+
+            if (System.IO.File.Exists(path + userid + ".doc"))
+            {
+                filename = userid + ".doc";
+            }
+            if (System.IO.File.Exists(path + userid + ".docx"))
+            {
+                filename = userid + ".docx";
+            }*/
+
+            //originalFile = path + filename;
+
+            //var source = Package.Open(originalFile);
+            var document = WordprocessingDocument.Open(filePath, true);
+            HtmlConverterSettings settings = new HtmlConverterSettings();
+            XElement html = HtmlConverter.ConvertToHtml(document, settings);
+            var writer = System.IO.File.CreateText(Server.MapPath("~/App_Data/") + userid + ".html");
+            writer.WriteLine(html.ToString());
+            writer.Dispose();
+            document.Close();
+
+        }
+
 
         //
         // GET: /Account/Register

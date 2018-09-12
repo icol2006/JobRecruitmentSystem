@@ -1,6 +1,6 @@
 ﻿@model AppJobRecruitmentSystem.Models.RegisterCompanyViewModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Registro empresa";
 }
 
 <link href="~/Content/personaldata.css" rel="stylesheet" />
@@ -19,34 +19,34 @@
         <div class="col-md-6">
             <div class="form-group">
                 @Html.LabelFor(m => m.Name, new { @class = "col-md-12 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                <div class="col-md-12">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control col-md-12" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Description, new { @class = "col-md-12 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                <div class="col-md-12">
+                    @Html.TextBoxFor(m => m.Description, new { @class = "form-control col-md-12" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Email, new { @class = "col-md-12 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                <div class="col-md-12">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control col-md-12" })
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 @Html.LabelFor(m => m.Password, new { @class = "col-md-12 control-label" })
-                <div class="col-md-10">
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                <div class="col-md-12">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control col-md-12" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-12 control-label" })
-                <div class="col-md-10">
-                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                <div class="col-md-12">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control col-md-12" })
                 </div>
             </div>
             <div class="form-group">

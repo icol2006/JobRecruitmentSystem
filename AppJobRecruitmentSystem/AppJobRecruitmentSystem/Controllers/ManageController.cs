@@ -20,6 +20,10 @@ namespace AppJobRecruitmentSystem.Controllers
         {
         }
 
+
+
+
+
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;

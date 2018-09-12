@@ -74,6 +74,11 @@ namespace AppJobRecruitmentSystem.DAL
                     candidate.identification = Convert.ToInt32(dataReader["identification"].ToString());
                     candidate.rol = (Rol)Convert.ToInt32(dataReader["rol"].ToString());
                     candidate.resume = dataReader["resume"].ToString();
+                    candidate.maritalStatus= dataReader["maritalStatus"].ToString();
+                    candidate.placeResidence = dataReader["placeResidence"].ToString();
+                    candidate.phone= Convert.ToInt32(dataReader["phone"].ToString());
+                    candidate.birthdate = Convert.ToDateTime(dataReader["birthdate"].ToString());
+                    candidate.nationality = dataReader["nationality"].ToString();
                 }
             }
             catch (Exception)
@@ -88,7 +93,7 @@ namespace AppJobRecruitmentSystem.DAL
             return candidate;
         }
 
-        public async void InsertCandidate(Candidate pCandidate)
+        public void InsertCandidate(Candidate pCandidate)
         {
             var parameters = new List<SqlParameter>();
 
@@ -99,8 +104,13 @@ namespace AppJobRecruitmentSystem.DAL
                     parameters.Add(dbManager.CreateParameter("@lastname", 150, pCandidate.lastname == null ? "" : pCandidate.lastname, DbType.String));
                     parameters.Add(dbManager.CreateParameter("@identification", 15, pCandidate.identification, DbType.Int32));
                     parameters.Add(dbManager.CreateParameter("@resume", 150, pCandidate.resume == null ? "" : pCandidate.resume, DbType.String));
+                    parameters.Add(dbManager.CreateParameter("@maritalStatus", 150, pCandidate.maritalStatus == null ? "" : pCandidate.maritalStatus, DbType.String));
+                    parameters.Add(dbManager.CreateParameter("@placeResidence", 150, pCandidate.placeResidence == null ? "" : pCandidate.placeResidence, DbType.String));
+                    parameters.Add(dbManager.CreateParameter("@phone", 15, pCandidate.phone, DbType.Int32));
+                    parameters.Add(dbManager.CreateParameter("@birthdate", pCandidate.birthdate, DbType.DateTime));
+                    parameters.Add(dbManager.CreateParameter("@nationality", 150, pCandidate.nationality == null ? "" : pCandidate.nationality, DbType.String));
 
-                    dbManager.ExecuteNonQuery("sp_AddCandidate", CommandType.StoredProcedure, parameters.ToArray());
+                dbManager.ExecuteNonQuery("sp_AddCandidate", CommandType.StoredProcedure, parameters.ToArray());
                 
             }catch(Exception ex) {
 
@@ -121,6 +131,11 @@ namespace AppJobRecruitmentSystem.DAL
                 parameters.Add(dbManager.CreateParameter("@lastname", 150, pCandidate.lastname == null ? "" : pCandidate.lastname, DbType.String));
                 parameters.Add(dbManager.CreateParameter("@identification", 15, pCandidate.identification, DbType.Int32));
                 parameters.Add(dbManager.CreateParameter("@resume", 150, pCandidate.resume == null ? "" : pCandidate.resume, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@maritalStatus", 150, pCandidate.maritalStatus == null ? "" : pCandidate.maritalStatus, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@placeResidence", 150, pCandidate.placeResidence == null ? "" : pCandidate.placeResidence, DbType.String));
+                parameters.Add(dbManager.CreateParameter("@phone", 15, pCandidate.phone, DbType.Int32));
+                parameters.Add(dbManager.CreateParameter("@birthdate", pCandidate.birthdate, DbType.DateTime));
+                parameters.Add(dbManager.CreateParameter("@nationality", 150, pCandidate.nationality == null ? "" : pCandidate.nationality, DbType.String));
 
                 dbManager.ExecuteNonQuery("sp_UpdateCandidate", CommandType.StoredProcedure, parameters.ToArray());
             }

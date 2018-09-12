@@ -84,7 +84,6 @@ C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\Google.Apis.Core.xml
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\Google.Apis.Drive.v3.pdb
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\Google.Apis.Drive.v3.xml
-C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\obj\Debug\AppJobRecruitmentSystem.csprojResolveAssemblyReference.cache
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\DriveConsole.dll
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\DriveConsole.pdb
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\DocumentFormat.OpenXml.dll
@@ -93,3 +92,4 @@ C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\DocumentFormat.OpenXml.xml
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\HtmlRenderer.dll
 C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\bin\HtmlRenderer.pdb
+C:\Users\Maykol\Documents\Software deveploment\Asp .net\MVC\JobRecruitmentSystem\AppJobRecruitmentSystem\AppJobRecruitmentSystem\obj\Debug\AppJobRecruitmentSystem.csprojResolveAssemblyReference.cache

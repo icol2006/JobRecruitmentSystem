@@ -25,10 +25,10 @@
                 <li class="nav-item nav-link">
                     @Html.ActionLink("Ofertas laborales", "Index", "Jobs")
                 </li>
-                @if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated && User.IsInRole("candidate"))
                 {
                     <li class="nav-item nav-link">
-                        @Html.ActionLink("Postulaciones", "Index", "JobAplications")
+                        @Html.ActionLink("Mis postulaciones", "Index", "JobAplications")
                     </li>
                 }
             </ul>
@@ -115,3 +115,5 @@
 
 </body>
 </html>
+
+ 

@@ -1,6 +1,6 @@
 ﻿@model AppJobRecruitmentSystem.Models.RegisterCandidateViewModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Registro candidato";
 }
 
 <link href="~/Content/personaldata.css" rel="stylesheet" />
@@ -21,50 +21,79 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.FirstName, new { @class = "col-md-12 control-label" })
                         <div class="col-md-12">
-                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control col-md-12" })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.LastName, new { @class = "col-md-12 control-label" })
-                        <div class="col-md-12">
-                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                        <div class="col-md-12"> 
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control col-md-12" })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.identification, new { @class = "col-md-12 control-label" })
                         <div class="col-md-12">
-                            @Html.TextBoxFor(m => m.identification, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.identification, new { @class = "form-control col-md-12" })
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12 control-label" style="margin-bottom:10px">
-                            Curriculum(Solo formato word)
+                            Subir curriculum(Solo formato word)
                         </div>
                         <div class="col-md-12">
                             <input type="file" id="imageUploadForm" name="image" multiple="multiple" />
                             <div class="loader"></div>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.maritalStatus, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                         @Html.DropDownListFor(x => x.maritalStatus,null, htmlAttributes: new { @class = "form-control col-md-5" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.placeResidence, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.placeResidence, new { @class = "form-control col-md-12" })
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="form-group">
+                        @Html.LabelFor(m => m.phone, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.phone, new { @class = "form-control col-md-12" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.birthdate, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.birthdate, new { @class = "form-control datepicker col-md-12" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.nationality, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.nationality, new { @class = "form-control col-md-12" })
+                        </div>
+                    </div>
+                    <div class="form-group">
                         @Html.LabelFor(m => m.Email, new { @class = "col-md-12 control-label" })
                         <div class="col-md-12">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control col-md-12" })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Password, new { @class = "col-md-12 control-label" })
                         <div class="col-md-12">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control col-md-12" })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-12 control-label" })
                         <div class="col-md-12">
-                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control col-md-12" })
                         </div>
                     </div>
                     <div class="form-group">

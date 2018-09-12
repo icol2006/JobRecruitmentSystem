@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AppJobRecruitmentSystem.Models
@@ -113,7 +114,7 @@ namespace AppJobRecruitmentSystem.Models
         [Required(ErrorMessage = "Apellido es requerido")]
         [StringLength(150, ErrorMessage = "Apellido debe posser minimo 1 letra", MinimumLength = 1)]
         [DataType(DataType.Text)]
-        [Display(Name = "Apellido")]
+        [Display(Name = "Apellidos")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Identification es requerido")]
@@ -122,6 +123,27 @@ namespace AppJobRecruitmentSystem.Models
 
         [Display(Name = "Curriculum")]
         public string Resume { get; set; }
+
+
+        [Required(ErrorMessage = "Estado es requerido")]
+        [Display(Name = "Estado civil")]
+        public string maritalStatus { get; set; }
+
+        [Required(ErrorMessage = "Lugar de residencia requerido")]
+        [Display(Name = "Lugar de residencia")]
+        public String placeResidence { get; set; }
+
+        [Required(ErrorMessage = "Telefono es requerido")]
+        [Display(Name = "Telefono")]
+        public int phone { get; set; }
+
+        [Required(ErrorMessage = "Fecha de nacimiento es requerido")]
+        [Display(Name = "Fecha de nacimiento")]
+        public DateTime birthdate { get; set; }
+
+        [Required(ErrorMessage = "Nacionalidad es requerida")]
+        [Display(Name = "Nacionalidad")]
+        public String nationality { get; set; }
 
     }
 

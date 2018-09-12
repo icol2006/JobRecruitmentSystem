@@ -31,7 +31,7 @@ namespace AppJobRecruitmentSystem.Controllers
              string searchString, string searchDateStart, string searchDateEnd, string id_category)
         {
 
-            int pageSize = 6;
+            int pageSize = 30;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             List<Job> listJobs = new List<Job>();
@@ -139,6 +139,8 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(job);
         }
 
+
+
         // POST: Jobs/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -215,6 +217,24 @@ namespace AppJobRecruitmentSystem.Controllers
             }
 
              return RedirectToAction("Create", " JobAplications", new { id = 0, id_candidate = ViewBag.iduser, id_job = id_job, dateofaplication = System.DateTime.Now });
+        }
+
+        public PartialViewResult Details(String id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("Id");
+            }
+            Job job = new Job();
+            job = db.GetJob(Convert.ToInt32(id));
+
+            job.category = new CategoryBAL().GetCategory(job.id_category);
+
+            if (job == null)
+            {
+                throw new ArgumentNullException("Job");
+            }
+            return PartialView(job);
         }
 
     }

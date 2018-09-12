@@ -25,12 +25,38 @@
                 <li class="nav-item nav-link">
                     @Html.ActionLink("Ofertas laborales", "Index", "Jobs")
                 </li>
-                @if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated && User.IsInRole("candidate"))
                 {
                     <li class="nav-item nav-link">
-                        @Html.ActionLink("Postulaciones", "Index", "JobAplications")
+                        @Html.ActionLink("Mis postulaciones", "Index", "JobAplications")
                     </li>
                 }
+
+                <li class="nav-item dropdown">  
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        Ayuda
+                    </a>  
+                    <div class="dropdown-menu">
+                        @{ if (!User.IsInRole("company"))
+                            {
+                                <a class="dropdown-item" href="#">
+                                    @Html.ActionLink("Manual ayuda candidato", "DownloadCandidateManual", "Candidates", null, htmlAttributes: new { @class = "dropdown-item" })
+                                </a>
+                            }
+                        }
+                        @{ if (!User.IsInRole("candidate"))
+                            {
+                                <a class="dropdown-item" href="#">
+                                    @Html.ActionLink("Manual ayuda empresas", "DownloadCompanyManual", "Companies", null, htmlAttributes: new { @class = "dropdown-item" })
+                                </a>
+                            }
+                        }
+
+
+                    </div>
+
+                </li>
+
             </ul>
             @Html.Partial("_LoginPartial")
           </div>
@@ -115,3 +141,5 @@
 
 </body>
 </html>
+
+ 

@@ -14,7 +14,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/06/2018 21:30:31</publishTime>
     </File>
     <File Include="bin/AppJobRecruitmentSystem.dll">
-      <publishTime>09/06/2018 16:09:00</publishTime>
+      <publishTime>09/12/2018 10:57:59</publishTime>
     </File>
     <File Include="bin/DocumentFormat.OpenXml.dll">
       <publishTime>01/06/2018 01:25:34</publishTime>
@@ -431,10 +431,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/24/2018 14:55:16</publishTime>
     </File>
     <File Include="Views/Account/RegisterCandidate.cshtml">
-      <publishTime>08/30/2018 15:41:47</publishTime>
+      <publishTime>09/12/2018 10:44:55</publishTime>
     </File>
     <File Include="Views/Account/RegisterCompany.cshtml">
-      <publishTime>08/20/2018 17:33:26</publishTime>
+      <publishTime>09/12/2018 10:45:19</publishTime>
     </File>
     <File Include="Views/Account/ResetPassword.cshtml">
       <publishTime>08/31/2018 16:37:18</publishTime>
@@ -452,31 +452,37 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/06/2018 21:30:35</publishTime>
     </File>
     <File Include="Views/Candidates/Edit.cshtml">
-      <publishTime>09/06/2018 13:20:53</publishTime>
+      <publishTime>09/12/2018 10:22:33</publishTime>
     </File>
     <File Include="Views/Companies/Delete.cshtml">
       <publishTime>07/13/2018 14:59:16</publishTime>
     </File>
     <File Include="Views/Companies/Edit.cshtml">
-      <publishTime>08/20/2018 10:34:35</publishTime>
+      <publishTime>09/12/2018 10:50:57</publishTime>
     </File>
     <File Include="Views/Companies/Index.cshtml">
       <publishTime>07/25/2018 18:48:06</publishTime>
     </File>
+    <File Include="Views/JobAplications/Details.cshtml">
+      <publishTime>09/12/2018 10:47:12</publishTime>
+    </File>
     <File Include="Views/JobAplications/Index.cshtml">
-      <publishTime>09/06/2018 14:44:03</publishTime>
+      <publishTime>09/12/2018 10:43:26</publishTime>
     </File>
     <File Include="Views/Jobs/Create.cshtml">
-      <publishTime>08/21/2018 11:23:08</publishTime>
+      <publishTime>09/12/2018 10:46:44</publishTime>
     </File>
     <File Include="Views/Jobs/Delete.cshtml">
       <publishTime>07/31/2018 20:57:36</publishTime>
     </File>
+    <File Include="Views/Jobs/Details.cshtml">
+      <publishTime>09/10/2018 22:46:36</publishTime>
+    </File>
     <File Include="Views/Jobs/Edit.cshtml">
-      <publishTime>09/06/2018 15:09:02</publishTime>
+      <publishTime>09/12/2018 10:46:03</publishTime>
     </File>
     <File Include="Views/Jobs/Index.cshtml">
-      <publishTime>09/06/2018 15:25:36</publishTime>
+      <publishTime>09/12/2018 07:58:48</publishTime>
     </File>
     <File Include="Views/Manage/AddPhoneNumber.cshtml">
       <publishTime>06/06/2018 21:30:35</publishTime>
@@ -506,10 +512,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/06/2018 21:30:35</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>08/20/2018 16:59:19</publishTime>
+      <publishTime>09/12/2018 10:20:36</publishTime>
     </File>
     <File Include="Views/Shared/_LoginPartial.cshtml">
-      <publishTime>08/21/2018 08:09:55</publishTime>
+      <publishTime>09/12/2018 10:50:25</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>06/06/2018 21:30:03</publishTime>
@@ -518,7 +524,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/06/2018 21:30:03</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>09/06/2018 16:09:24</publishTime>
+      <publishTime>09/12/2018 11:02:37</publishTime>
     </File>
   </ItemGroup>
 </Project>

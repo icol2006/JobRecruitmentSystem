@@ -1,0 +1,53 @@
+﻿@model AppJobRecruitmentSystem.Entities.Job
+
+@Styles.Render("~/Content/css")
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div>
+    <br />
+    <dl class="col-md-12">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.date_publication)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.date_publication)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.category.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.category.name)
+        </dd>
+
+ 
+    </dl>
+</div>
+
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")

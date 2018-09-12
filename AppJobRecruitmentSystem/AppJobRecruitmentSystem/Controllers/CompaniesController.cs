@@ -184,6 +184,14 @@ namespace AppJobRecruitmentSystem.Controllers
             return View(company);
         }
 
+        [AllowAnonymous]
+        public FileResult DownloadCompanyManual()
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/App_Data/" + "Manual ayuda de Empresas.pdf"));
+            string fileName = "Manual ayuda de Empresas.pdf";
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, fileName);
+        }
+
         // GET: Companies/Delete/5
         /*public ActionResult Delete(int? id)
         {
@@ -200,15 +208,15 @@ namespace AppJobRecruitmentSystem.Controllers
         }*/
 
         // POST: Companies/Delete/5
-       /* [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Company company = db.Companies.Find(id);
-            db.Companies.Remove(company);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }*/
+        /* [HttpPost, ActionName("Delete")]
+         [ValidateAntiForgeryToken]
+         public ActionResult DeleteConfirmed(int id)
+         {
+             Company company = db.Companies.Find(id);
+             db.Companies.Remove(company);
+             db.SaveChanges();
+             return RedirectToAction("Index");
+         }*/
 
         /*protected override void Dispose(bool disposing)
         {

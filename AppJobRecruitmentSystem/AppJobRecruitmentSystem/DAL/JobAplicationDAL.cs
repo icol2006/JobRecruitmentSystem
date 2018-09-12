@@ -78,6 +78,43 @@ namespace AppJobRecruitmentSystem.DAL
             return JobAplicacion;
         }
 
+        public List<JobAplication> GetJobAplicacionByIdJob(int id)
+        {
+            List<JobAplication> listJobAplication = new List<JobAplication>();
+            JobAplication jobAplicacion = new JobAplication();
+            var parameters = new List<SqlParameter>();
+            SqlConnection connection = new SqlConnection();
+
+            parameters.Add(dbManager.CreateParameter("@id", id, DbType.Int32));
+
+            SqlDataReader dataReader = dbManager.GetDataReader("sp_GetJobAplicationByIdJob", CommandType.StoredProcedure, parameters.ToArray(), out connection);
+
+            try
+            {
+
+                while (dataReader.Read())
+                {
+                    jobAplicacion.id = Convert.ToInt32(dataReader["id"].ToString());
+                    jobAplicacion.id_job = Convert.ToInt32(dataReader["id_job"].ToString());
+                    jobAplicacion.id_candidate = dataReader["id_candidate"].ToString();
+                    jobAplicacion.dateofaplication = Convert.ToDateTime(dataReader["dateofaplication"].ToString());
+
+                    listJobAplication.Add(jobAplicacion);
+                    jobAplicacion = new JobAplication();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                dataReader.Close();
+                dbManager.CloseConnection(connection);
+            }
+
+            return listJobAplication;
+        }
+
         public void InsertJobAplicacion(JobAplication pJobAplicacion)
         {
             var parameters = new List<SqlParameter>();

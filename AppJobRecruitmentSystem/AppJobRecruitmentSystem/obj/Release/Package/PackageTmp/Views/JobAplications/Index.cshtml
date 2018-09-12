@@ -2,7 +2,7 @@
 @using PagedList.Mvc;
 
     @{
-        ViewBag.Title = "Index";
+        ViewBag.Title = "Postulaciones";
     }
 
     <h2>Listado de postulaciones a trabajos</h2>
@@ -40,8 +40,7 @@
             </div>
            
 
-
-            <div class="col-md-9 col-lg-9 datosCandidatosEmpresas" style="overflow: scroll;width:100%;height: 85%;">
+            <div class="col-md-9 col-lg-9 datosCandidatosEmpresas" style="overflow: scroll;width:100%;height: 600px;">
                 <table class="table">
                     <tr>
                         <th>
@@ -69,6 +68,7 @@
                         <th>
                             @Html.DisplayNameFor(model => model.FirstOrDefault().dateofaplication)
                         </th>
+                        <th>Detalles oferta trabajo</th>
                         @if (User.IsInRole("candidate") || User.IsInRole("administrator"))
                         {
                             <th></th>
@@ -92,7 +92,7 @@
                                 </td>
                                 <td>
                                     @Html.HiddenFor(modelItem => item.candidate.id)
-                                    <button type="button" class="btn btn-primary btnShowResume" data-toggle="modal" data-target="#myModal">
+                                    <button type="button" class="btn btn-primary btnShowResume" data-toggle="modal" data-target="#modalCandidate">
                                         Ver
                                     </button>
                                 </td>
@@ -113,6 +113,13 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.dateofaplication)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(modelItem => item.job.id)
+                                <button type="button" class="btn btn-primary btnShowResume" data-toggle="modal" data-target="#modalCandidate">
+                                    Ver
+                                </button>
+
                             </td>
                             @if (User.IsInRole("candidate") || User.IsInRole("administrator"))
                             {
@@ -158,13 +165,14 @@
 
 
     <!-- The Modal -->
-    <div class="modal" id="myModal">
+
+    <div class="modal" id="modalCandidate">
         <div class="modal-dialog modal-lg">
             <div class="modal-content col-md-12">
 
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Datos del candidato</h4>
+                    <h4 class="modal-title">Datos de la oferta de trabajo</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -175,18 +183,18 @@
 
                 </iframe>
                 </div>
-                <div id="idCandidate" style="display: none;">
+                <div id="idJob" style="display: none;">
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button id="btndownloadfile" type="button" class="btn btn-success" data-dismiss="modal">Descargar Curriculum</button>
                     <button id="btnclosemodal" type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                 </div>
 
             </div>
-        </div>s
+        </div>
     </div>
+
 
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
@@ -204,10 +212,10 @@
             $(function () {
                 $(".btnShowResume").click(function () {
 
-                    id = $(this).closest("tr").find("#item_candidate_id").val();
-                    $('#idCandidate').text(id);
+                    id = $(this).closest("tr").find("#item_job_id").val();
+                    $('#idJob').text(id);
 
-                   $('#res').attr('src',  '@Url.Action("getResume", "Candidates")?id='+id);
+                   $('#res').attr('src',  '@Url.Action("Details", "Jobs")?id='+id);
 
 
                 });
@@ -216,7 +224,7 @@
                 $("#btndownloadfile").click(function () {
                     var formData = new FormData();
               
-                    //var id = $('#idCandidate').text();
+                    //var id = $('#idJob').text();
                     location.href = '@Url.Action("GetFile", "Candidates")?candidateId=' + id;
                     
                     $.ajax({
@@ -240,8 +248,5 @@
 
 
         </script>
-
-
-
     }
 

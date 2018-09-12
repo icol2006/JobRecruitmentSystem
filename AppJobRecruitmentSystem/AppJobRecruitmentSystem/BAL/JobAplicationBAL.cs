@@ -21,6 +21,11 @@ namespace AppJobRecruitmentSystem.BAL
             return jobAplicationDAL.GetJobAplicacion(id);
         }
 
+        public List<JobAplication> GetJobAplicacionByIdJob(int id)
+        {
+            return jobAplicationDAL.GetJobAplicacionByIdJob(id);
+        }
+
         public void InsertJobAplicacion(JobAplication pJobAplicacion)
         {
             jobAplicationDAL.InsertJobAplicacion(pJobAplicacion);

@@ -2,6 +2,7 @@
                         @using Microsoft.AspNet.Identity.Owin;
                         @using Microsoft.AspNet.Identity; 
 
+
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -21,7 +22,7 @@
 
                         var controllerName = "";
 
-                        if(User.IsInRole("candidate"))
+                        if (User.IsInRole("candidate"))
                         {
                             controllerName = "Candidates";
                         }
@@ -39,8 +40,19 @@
                     }
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#">
-                            
-                            @Html.ActionLink("Mi perfil", "Edit", @controllerName, new { id = User.Identity.GetUserId() }, htmlAttributes: new { @class = "dropdown-item" }) 
+                            @{
+                                var textoDatos = "";
+                                if (User.IsInRole("candidate"))
+                                {
+                                    textoDatos = "Mi curriculum";
+                                }
+                                else
+                                {
+                                    textoDatos = "Perfil";
+                                }
+                            }
+
+                            @Html.ActionLink(textoDatos, "Edit", @controllerName, new { id = User.Identity.GetUserId() }, htmlAttributes: new { @class = "dropdown-item" }) 
                         </a>
                         <a class="dropdown-item" href="#">
                             @Html.ActionLink("Cambiar clave", "ChangePassword", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "dropdown-item" })

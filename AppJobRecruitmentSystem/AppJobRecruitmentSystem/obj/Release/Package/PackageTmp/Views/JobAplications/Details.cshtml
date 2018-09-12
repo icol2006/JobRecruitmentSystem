@@ -1,0 +1,182 @@
+﻿@model AppJobRecruitmentSystem.Models.JobApplicationDetails
+
+@{
+    ViewBag.Title = "Detalles oferta";
+}
+
+
+
+<div>
+    <br />
+    <h4>Oferta de trabajo</h4>
+    <hr />
+    <dl class="dl-horizontal"></dl>
+    @Html.DisplayFor(modelItem => Model.job.name)
+    <br />
+    @Html.DisplayFor(modelItem => Model.job.description)
+    <br /><br />
+  
+    <div style="overflow: scroll;width:100%;height: 100%;">
+
+        <h4>Listado de candidatos</h4>
+        <table class="table">
+            <tr>
+                <th>
+                    Codigo
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.listJobApplicationInfo.FirstOrDefault().firtsname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.listJobApplicationInfo.FirstOrDefault().dateofaplication)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.listJobApplicationInfo.FirstOrDefault().maritalStatus)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.listJobApplicationInfo.FirstOrDefault().placeResidence)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.listJobApplicationInfo.FirstOrDefault().phone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.listJobApplicationInfo.FirstOrDefault().birthdate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.listJobApplicationInfo.FirstOrDefault().nationality)
+                </th>
+                <th>
+                    Curriculum en Word
+                </th>
+            </tr>
+
+            @foreach (var item in Model.listJobApplicationInfo)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.id_jobOffer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.firtsname)
+                        @Html.DisplayFor(modelItem => item.lastname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.dateofaplication)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.maritalStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.placeResidence)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.birthdate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nationality)
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.id_candidate)
+                        <button type="button" class="btn btn-primary btnShowResume" data-toggle="modal" data-target="#myModal">
+                            Ver
+                        </button>
+                    </td>
+                </tr>
+            }
+        </table>
+
+    </div>
+
+
+
+</div>
+<br />
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content col-md-12">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Datos del candidato</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <iframe id="res" src="" class="col-md-12 col-lg-12" height="500"></iframe>
+            </div>
+            <div id="idCandidate" style="display: none;">
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button id="btndownloadfile" type="button" class="btn btn-success" data-dismiss="modal">Descargar Curriculum</button>
+                <button id="btnclosemodal" type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Volver al listado de ofertas", "Index","Jobs")
+</p>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+            var resumeId = "";
+            var id = "";
+            $(function () {
+                $("#btnclosemodal").click(function () {
+                    $('#res').attr('src', '');
+                });
+            });
+
+
+            $(function () {
+                $(".btnShowResume").click(function () {
+
+                    id = $(this).closest("tr").find("#item_id_candidate").val();
+                    $('#idCandidate').text(id);
+
+                   $('#res').attr('src',  '@Url.Action("getResume", "Candidates")?id='+id);
+
+
+                });
+            });
+            $(function () {
+                $("#btndownloadfile").click(function () {
+                    var formData = new FormData();
+
+                    //var id = $('#idCandidate').text();
+                    location.href = '@Url.Action("GetFile", "Candidates")?candidateId=' + id;
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("GetFile", "Candidates")',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                           // alert(result);
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                          // alert('No se subio el archivo');
+                        }
+                    });
+
+                });
+            });
+
+
+
+
+    </script>
+}
